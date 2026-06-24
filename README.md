@@ -1,2 +1,4 @@
 # OpportunityNYC
-A full-stack community resource and opportunity platform that helps New York City residents discover jobs, internships, scholarships, housing assistance, food programs, workshops, and support services through one centralized application.
+OpportunityNYC is a community resource and opportunity platform designed to serve residents throughout New York City's five boroughs. Many valuable opportunities and support services already exist, but information is often scattered across multiple websites and organizations. OpportunityNYC addresses this problem by bringing jobs, internships, scholarships, workshops, housing resources, food assistance programs, and first-generation student support services into one centralized platform.
+
+The goal of the project is to improve accessibility, simplify resource discovery, and help users quickly find opportunities that support their educational, professional, and personal development. The application will provide search and filtering capabilities, responsive mobile and desktop experiences, and a scalable full-stack architecture capable of supporting future growth and additional resource categories.
