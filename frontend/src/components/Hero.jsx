@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import subwayHero from "../assets/subway-hero.jpg";
 import CategoryPill from "./CategoryPill";
 
@@ -11,6 +13,14 @@ const categories = [
 ];
 
 export default function Hero() {
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
+
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+    navigate(`/search?q=${encodeURIComponent(query)}`);
+  }
+
   return (
     <header
       className="relative bg-cover bg-center pb-14"
@@ -48,10 +58,6 @@ export default function Hero() {
 
       {/* Hero content */}
       <div className="max-w-3xl mx-auto px-6 pt-10 text-left">
-        <div className="inline-block font-sans text-[11px] tracking-widest uppercase text-cream bg-cream/10 border border-cream/25 rounded-md px-3.5 py-2 mb-5">
-          Civic Resource Directory
-        </div>
-
         <h1 className="font-sans font-semibold text-white text-5xl leading-tight mb-4">
           Find opportunities built for New Yorkers.
         </h1>
@@ -61,16 +67,21 @@ export default function Hero() {
           boroughs. Organized, verified, and updated daily.
         </p>
 
-        <div className="flex max-w-xl gap-1.5 bg-accent-dark/55 border border-cream/25 rounded-xl p-1.5 backdrop-blur-sm mb-7">
+        <form
+          onSubmit={handleSearchSubmit}
+          className="flex max-w-xl gap-1.5 bg-accent-dark/55 border border-cream/25 rounded-xl p-1.5 backdrop-blur-sm mb-7"
+        >
           <input
             type="text"
-            placeholder="Try 'summer internship in Brooklyn' or 'emergency housing'"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search for what you need!"
             className="flex-1 bg-transparent outline-none px-4 text-cream placeholder:text-cream/55"
           />
           <button className="bg-white text-charcoal font-semibold text-sm rounded-lg px-6">
             Search
           </button>
-        </div>
+        </form>
 
         <div className="font-sans text-[11px] tracking-widest uppercase text-cream/60 mb-3.5">
           Browse by Category
