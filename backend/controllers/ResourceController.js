@@ -1,10 +1,55 @@
 const Resource = require("../models/Resource");
 
+const buildResourceQuery = (queryParams) => {
+    const query = {};
+
+    if (queryParams.type) {
+        query.type = queryParams.type;
+    }
+
+    if (queryParams.borough) {
+        query.borough = new RegExp(`^${queryParams.borough}$`, "i");
+    }
+
+    if (queryParams.q) {
+        const regex = new RegExp(queryParams.q, "i");
+        query.$or = [
+            { title: regex },
+            { description: regex },
+            { address: regex },
+            { borough: regex },
+            { postcode: regex },
+        ];
+    }
+
+    return query;
+};
+
 // Get all resources
 const getAllResources = async (req, res) => {
     try {
-        const resources = await Resource.find();
-        res.status(200).json(resources);
+        const query = buildResourceQuery(req.query);
+        const limit = Math.min(parseInt(req.query.limit, 10) || 100, 500);
+        const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+        const skip = (page - 1) * limit;
+
+        const [resources, total] = await Promise.all([
+            Resource.find(query)
+                .sort({ title: 1 })
+                .skip(skip)
+                .limit(limit),
+            Resource.countDocuments(query),
+        ]);
+
+        res.status(200).json({
+            data: resources,
+            pagination: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit) || 1,
+            },
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

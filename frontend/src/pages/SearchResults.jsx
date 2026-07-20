@@ -1,72 +1,69 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import HelpButton from "../components/HelpButton";
 import OppCard from "../components/OppCard";
-
-const allOpportunities = [
-  {
-    badgeType: "fulltime",
-    badgeLabel: "FULL-TIME",
-    title: "Community Health Outreach Coordinator",
-    org: "NYC Dept. of Health · Brooklyn",
-    posted: "Posted 2 days ago",
-  },
-  {
-    badgeType: "internship",
-    badgeLabel: "INTERNSHIP",
-    title: "Summer Data Analytics Fellow",
-    org: "NYC Opportunity · Manhattan",
-    posted: "Posted 5 days ago",
-  },
-  {
-    badgeType: "scholarship",
-    badgeLabel: "SCHOLARSHIP",
-    title: "CUNY First-Gen Student Grant",
-    org: "CUNY Foundation · Citywide",
-    posted: "Posted 1 week ago",
-  },
-  {
-    badgeType: "fulltime",
-    badgeLabel: "FULL-TIME",
-    title: "Emergency Housing Case Manager",
-    org: "NYC Dept. of Social Services · Bronx",
-    posted: "Posted 3 days ago",
-  },
-  {
-    badgeType: "internship",
-    badgeLabel: "INTERNSHIP",
-    title: "Youth Workforce Development Intern",
-    org: "NYC Opportunity · Queens",
-    posted: "Posted 1 week ago",
-  },
-  {
-    badgeType: "scholarship",
-    badgeLabel: "SCHOLARSHIP",
-    title: "First-Gen College Access Grant",
-    org: "CUNY Foundation · Staten Island",
-    posted: "Posted 4 days ago",
-  },
-];
+import { getOpportunities, mapOpportunityToCard } from "../lib/api";
 
 export default function SearchResults() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
+  const category = searchParams.get("category") ?? "Job";
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState(query);
+  const [results, setResults] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const results = query
-    ? allOpportunities.filter((opp) =>
-        `${opp.title} ${opp.org} ${opp.badgeLabel}`
-          .toLowerCase()
-          .includes(query.toLowerCase())
-      )
-    : allOpportunities;
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadResults() {
+      setLoading(true);
+      setError("");
+
+      try {
+        const response = await getOpportunities({
+          category,
+          q: query || undefined,
+          limit: 60,
+        });
+
+        if (!cancelled) {
+          setResults((response.data || []).map(mapOpportunityToCard));
+          setTotal(response.pagination?.total || 0);
+        }
+      } catch (fetchError) {
+        if (!cancelled) {
+          setError(fetchError.message || "Could not load opportunities.");
+          setResults([]);
+          setTotal(0);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadResults();
+    return () => {
+      cancelled = true;
+    };
+  }, [query, category]);
 
   function handleSubmit(e) {
     e.preventDefault();
-    navigate(`/search?q=${encodeURIComponent(inputValue)}`);
+    const params = new URLSearchParams();
+    if (inputValue.trim()) {
+      params.set("q", inputValue.trim());
+    }
+    if (category) {
+      params.set("category", category);
+    }
+    navigate(`/search?${params.toString()}`);
   }
 
   return (
@@ -79,7 +76,7 @@ export default function SearchResults() {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Try 'summer internship in Brooklyn' or 'emergency housing'"
+            placeholder="Try 'health outreach' or 'data analyst in Brooklyn'"
             className="flex-1 bg-white border border-charcoal/10 rounded-xl px-4 py-3 outline-none placeholder:text-warm-gray"
           />
           <button className="bg-forest hover:bg-forest-dark text-white font-semibold text-sm rounded-xl px-6">
@@ -88,23 +85,32 @@ export default function SearchResults() {
         </form>
 
         <h1 className="font-sans font-semibold text-2xl mb-1.5">
-          {query ? `Results for "${query}"` : "All Opportunities"}
+          {query ? `Results for "${query}"` : "NYC Job Postings"}
         </h1>
+        <p className="text-warm-gray text-sm mb-2">
+          Live listings synced from NYC Open Data
+        </p>
         <p className="text-warm-gray text-sm mb-8">
-          {results.length} {results.length === 1 ? "opportunity" : "opportunities"} found
+          {loading ? "Loading..." : `${total} ${total === 1 ? "opportunity" : "opportunities"} found`}
         </p>
 
-        {results.length > 0 ? (
+        {error && (
+          <p className="text-sm text-red-700 mb-6">
+            {error} Run `python scripts/sync_datasets.py` and start the backend to populate live data.
+          </p>
+        )}
+
+        {!loading && results.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[22px]">
             {results.map((opp) => (
-              <OppCard key={opp.title} {...opp} />
+              <OppCard key={opp.id || opp.title} {...opp} />
             ))}
           </div>
-        ) : (
+        ) : !loading && !error ? (
           <p className="text-warm-gray text-sm">
             No opportunities matched your search. Try a different keyword.
           </p>
-        )}
+        ) : null}
       </section>
 
       <Footer />
