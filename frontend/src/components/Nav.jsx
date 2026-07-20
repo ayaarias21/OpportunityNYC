@@ -14,7 +14,7 @@ export default function Nav() {
         </Link>
 
         <nav className="hidden md:flex gap-7 text-sm font-medium text-charcoal/75">
-          <a href="#" className="hover:text-charcoal">Jobs</a>
+          <Link to="/jobs" className="hover:text-charcoal">Jobs</Link>
           <a href="#" className="hover:text-charcoal">Housing</a>
           <a href="#" className="hover:text-charcoal">Food</a>
           <a href="#" className="hover:text-charcoal">Education</a>

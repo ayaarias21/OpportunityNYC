@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import subwayHero from "../assets/subway-hero.jpg";
 import CategoryPill from "./CategoryPill";
 
 const categories = [
-  { label: "Jobs", dotColor: "#3D6E96" },
+  { label: "Jobs", dotColor: "#3D6E96", href: "/jobs" },
   { label: "Internships", dotColor: "#9B8AC4" },
   { label: "Housing", dotColor: "#6B9E78" },
   { label: "Food", dotColor: "#E0A94C" },
@@ -41,7 +41,7 @@ export default function Hero() {
         </div>
 
         <nav className="hidden md:flex gap-7 text-sm font-medium text-cream/85">
-          <a href="#" className="hover:text-cream">Jobs</a>
+          <Link to="/jobs" className="hover:text-cream">Jobs</Link>
           <a href="#" className="hover:text-cream">Housing</a>
           <a href="#" className="hover:text-cream">Food</a>
           <a href="#" className="hover:text-cream">Education</a>
@@ -57,19 +57,19 @@ export default function Hero() {
       </div>
 
       {/* Hero content */}
-      <div className="max-w-3xl mx-auto px-6 pt-10 text-left">
-        <h1 className="font-sans font-semibold text-white text-5xl leading-tight mb-4">
+      <div className="max-w-3xl mx-auto px-6 pt-10 text-center">
+        <h1 className="font-sans font-semibold text-white text-5xl leading-tight mb-4 text-left">
           Find opportunities built for New Yorkers.
         </h1>
 
-        <p className="text-cream/80 text-lg max-w-lg mb-7">
+        <p className="text-cream/80 text-lg max-w-lg mx-auto mb-7">
           Search jobs, housing, food assistance, and student support across all five
-          boroughs. Organized, verified, and updated daily.
+          boroughs.
         </p>
 
         <form
           onSubmit={handleSearchSubmit}
-          className="flex max-w-xl gap-1.5 bg-accent-dark/55 border border-cream/25 rounded-xl p-1.5 backdrop-blur-sm mb-7"
+          className="flex max-w-xl mx-auto gap-1.5 bg-accent-dark/55 border border-cream/25 rounded-xl p-1.5 backdrop-blur-sm mb-7"
         >
           <input
             type="text"
@@ -86,12 +86,12 @@ export default function Hero() {
         <div className="font-sans text-[11px] tracking-widest uppercase text-cream/60 mb-3.5">
           Browse by Category
         </div>
-        <div className="flex flex-wrap gap-2.5 items-center">
+        <div className="flex flex-wrap justify-center gap-2.5 items-center">
           {categories.map((c) => (
-            <CategoryPill key={c.label} label={c.label} dotColor={c.dotColor} />
+            <CategoryPill key={c.label} label={c.label} dotColor={c.dotColor} href={c.href} />
           ))}
           <a href="#" className="text-cream/65 hover:text-cream text-sm px-1 py-2.5">
-            View all programs →
+            View all opportunities →
           </a>
         </div>
       </div>
