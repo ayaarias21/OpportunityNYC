@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const protect = require("../middleware/authMiddleware");
 
 const {
     getAllOpportunities,
@@ -11,8 +12,10 @@ const {
 
 router.get("/", getAllOpportunities);
 router.get("/:id", getOpportunityById);
-router.post("/", createOpportunity);
-router.put("/:id", updateOpportunity);
-router.delete("/:id", deleteOpportunity);
+
+// Protected routes (requires JWT token)
+router.post("/", protect, createOpportunity);
+router.put("/:id", protect, updateOpportunity);
+router.delete("/:id", protect, deleteOpportunity);
 
 module.exports = router;
