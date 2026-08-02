@@ -1,19 +1,19 @@
 const express = require("express");
+
 const router = express.Router();
-const protect = require("../middleware/authMiddleware");
+
 const {
-    getAllResources,
-    getResourceById,
-    createResource,
-    updateResource,
-    deleteResource,
+    getResources,
+    createResource
 } = require("../controllers/ResourceController");
 
-router.get("/", getAllResources);
-router.get("/:id", getResourceById);
+const protect = require("../middleware/authMiddleware");
+
+
+router.get("/", getResources);
+
+
 router.post("/", protect, createResource);
 
-router.put("/:id", protect, updateResource);
 
-router.delete("/:id", protect, deleteResource);
 module.exports = router;

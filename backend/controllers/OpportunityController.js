@@ -1,39 +1,72 @@
 const Opportunity = require("../models/Opportunity");
 
-// Get all opportunities
-const getAllOpportunities = async (req, res) => {
+const getOpportunities = async (req, res) => {
     try {
-        const opportunities = await Opportunity.find();
-        res.status(200).json(opportunities);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 
-// Get one opportunity
-const getOpportunityById = async (req, res) => {
-    try {
-        const opportunity = await Opportunity.findById(req.params.id);
+        const { borough, category, search } = req.query;
 
-        if (!opportunity) {
-            return res.status(404).json({ message: "Opportunity not found" });
+        let filter = {};
+
+        if (borough) {
+            filter.borough = borough;
         }
 
-        res.status(200).json(opportunity);
+        if (category) {
+            filter.category = category;
+        }
+
+        if (search) {
+            filter.$or = [
+                {
+                    title: {
+                        $regex: search,
+                        $options: "i"
+                    }
+                },
+                {
+                    organization: {
+                        $regex: search,
+                        $options: "i"
+                    }
+                },
+                {
+                    description: {
+                        $regex: search,
+                        $options: "i"
+                    }
+                }
+            ];
+        }
+
+        const opportunities = await Opportunity.find(filter);
+
+        res.status(200).json(opportunities);
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
+
+        res.status(500).json({
+            message: error.message
+        });
+
     }
 };
 
 // Create opportunity
 const createOpportunity = async (req, res) => {
     try {
+
         const opportunity = await Opportunity.create(req.body);
+
         res.status(201).json(opportunity);
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
+
+        res.status(400).json({
+            message: error.message,
+        });
     }
 };
+
 
 // Update opportunity
 const updateOpportunity = async (req, res) => {
@@ -45,34 +78,48 @@ const updateOpportunity = async (req, res) => {
         );
 
         if (!opportunity) {
-            return res.status(404).json({ message: "Opportunity not found" });
+            return res.status(404).json({
+                message: "Opportunity not found"
+            });
         }
 
         res.status(200).json(opportunity);
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 
 // Delete opportunity
 const deleteOpportunity = async (req, res) => {
     try {
-        const opportunity = await Opportunity.findByIdAndDelete(req.params.id);
+        const opportunity = await Opportunity.findByIdAndDelete(
+            req.params.id
+        );
 
         if (!opportunity) {
-            return res.status(404).json({ message: "Opportunity not found" });
+            return res.status(404).json({
+                message: "Opportunity not found"
+            });
         }
 
-        res.status(200).json({ message: "Opportunity deleted successfully" });
+        res.status(200).json({
+            message: "Opportunity deleted"
+        });
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 
+// Export controllers
 module.exports = {
-    getAllOpportunities,
-    getOpportunityById,
+    getOpportunities,
     createOpportunity,
     updateOpportunity,
-    deleteOpportunity,
+    deleteOpportunity
 };

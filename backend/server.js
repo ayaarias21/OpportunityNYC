@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 
@@ -10,7 +11,7 @@ const resourceRoutes = require("./routes/resourceRoutes");
 
 const app = express();
 
-// Connect Database
+// Connect to MongoDB
 connectDB();
 
 // Middleware
@@ -22,12 +23,12 @@ app.use("/api/users", userRoutes);
 app.use("/api/opportunities", opportunityRoutes);
 app.use("/api/resources", resourceRoutes);
 
-// Test Route
+// Test route
 app.get("/", (req, res) => {
     res.send("OpportunityNYC Backend Running");
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5050;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

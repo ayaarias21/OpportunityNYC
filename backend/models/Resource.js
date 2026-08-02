@@ -2,32 +2,56 @@ const mongoose = require("mongoose");
 
 const resourceSchema = new mongoose.Schema(
 {
-    title: String,
+    title: {
+        type: String,
+        required: true,
+    },
 
-    type: {
+    organization: {
+        type: String,
+        required: true,
+    },
+
+    category: {
         type: String,
         enum: [
             "Housing",
-            "Food",
+            "Food Assistance",
+            "Workshop",
+            "Student Support",
             "Healthcare",
-            "Education",
-            "Legal"
-        ]
+            "Other"
+        ],
+        required: true,
     },
 
-    borough: String,
+    borough: {
+        type: String,
+        enum: [
+            "Bronx",
+            "Brooklyn",
+            "Manhattan",
+            "Queens",
+            "Staten Island"
+        ],
+        required: true,
+    },
 
-    description: String,
+    description: {
+        type: String,
+        required: true,
+    },
 
-    address: String,
+    link: {
+        type: String,
+    },
 
-    phone: String,
-
-    website: String
+    contact: {
+        type: String,
+    }
 },
 {
-    timestamps: true
-}
-);
+    timestamps: true,
+});
 
 module.exports = mongoose.model("Resource", resourceSchema);
