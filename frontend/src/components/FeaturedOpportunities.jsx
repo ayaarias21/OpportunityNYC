@@ -35,13 +35,7 @@ export default function FeaturedOpportunities() {
   return (
     <section className="max-w-6xl mx-auto px-6 py-16">
       <div className="text-center mb-11">
-        <div className="font-sans text-xs tracking-widest uppercase text-accent mb-2.5">
-          Handpicked for You
-        </div>
         <h2 className="font-sans font-semibold text-3xl mb-2.5">Featured Opportunities</h2>
-        <p className="text-warm-gray text-sm">
-          {loading ? "Loading live NYC job postings..." : "A snapshot of what's currently open across the city."}
-        </p>
       </div>
 
       {!loading && featured.length === 0 ? (

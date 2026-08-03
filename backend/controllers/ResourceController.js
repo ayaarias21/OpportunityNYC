@@ -1,123 +1,91 @@
 const Resource = require("../models/Resource");
 
-const buildResourceQuery = (queryParams) => {
-    const query = {};
+const normalizeCategory = (queryParams) => {
+    if (queryParams.category) {
+        return queryParams.category;
+    }
 
-    if (queryParams.type) {
-        query.type = queryParams.type;
+    if (queryParams.type === "Food") {
+        return "Food Assistance";
+    }
+
+    return queryParams.type;
+};
+
+const buildResourceFilter = (queryParams) => {
+    const filter = {};
+
+    const category = normalizeCategory(queryParams);
+    if (category) {
+        filter.category = category;
     }
 
     if (queryParams.borough) {
-        query.borough = new RegExp(`^${queryParams.borough}$`, "i");
+        filter.borough = queryParams.borough;
     }
 
-    if (queryParams.q) {
-        const regex = new RegExp(queryParams.q, "i");
-        query.$or = [
-            { title: regex },
-            { description: regex },
-            { address: regex },
-            { borough: regex },
-            { postcode: regex },
+    const searchTerm = queryParams.search || queryParams.q;
+    if (searchTerm) {
+        filter.$or = [
+            { title: { $regex: searchTerm, $options: "i" } },
+            { organization: { $regex: searchTerm, $options: "i" } },
+            { description: { $regex: searchTerm, $options: "i" } },
+            { address: { $regex: searchTerm, $options: "i" } },
+            { borough: { $regex: searchTerm, $options: "i" } },
+            { postcode: { $regex: searchTerm, $options: "i" } },
         ];
     }
 
-    return query;
+    return filter;
 };
 
-// Get all resources
-const getAllResources = async (req, res) => {
+const getResources = async (req, res) => {
     try {
-        const query = buildResourceQuery(req.query);
+        const filter = buildResourceFilter(req.query);
         const limit = Math.min(parseInt(req.query.limit, 10) || 100, 500);
         const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
         const skip = (page - 1) * limit;
+        const usePagination = Boolean(req.query.limit || req.query.page);
 
-        const [resources, total] = await Promise.all([
-            Resource.find(query)
-                .sort({ title: 1 })
-                .skip(skip)
-                .limit(limit),
-            Resource.countDocuments(query),
-        ]);
+        const query = Resource.find(filter)
+            .sort({ title: 1 })
+            .skip(skip)
+            .limit(limit);
 
-        res.status(200).json({
-            data: resources,
-            pagination: {
-                page,
-                limit,
-                total,
-                totalPages: Math.ceil(total / limit) || 1,
-            },
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+        if (usePagination) {
+            const [resources, total] = await Promise.all([
+                query,
+                Resource.countDocuments(filter),
+            ]);
 
-// Get one resource
-const getResourceById = async (req, res) => {
-    try {
-        const resource = await Resource.findById(req.params.id);
-
-        if (!resource) {
-            return res.status(404).json({ message: "Resource not found" });
+            return res.status(200).json({
+                data: resources,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit) || 1,
+                },
+            });
         }
 
-        res.status(200).json(resource);
+        const resources = await Resource.find(filter).sort({ title: 1 });
+        res.status(200).json(resources);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-// Create resource
 const createResource = async (req, res) => {
     try {
         const resource = await Resource.create(req.body);
         res.status(201).json(resource);
     } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Update resource
-const updateResource = async (req, res) => {
-    try {
-        const resource = await Resource.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true }
-        );
-
-        if (!resource) {
-            return res.status(404).json({ message: "Resource not found" });
-        }
-
-        res.status(200).json(resource);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Delete resource
-const deleteResource = async (req, res) => {
-    try {
-        const resource = await Resource.findByIdAndDelete(req.params.id);
-
-        if (!resource) {
-            return res.status(404).json({ message: "Resource not found" });
-        }
-
-        res.status(200).json({ message: "Resource deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
 
 module.exports = {
-    getAllResources,
-    getResourceById,
+    getResources,
     createResource,
-    updateResource,
-    deleteResource,
 };

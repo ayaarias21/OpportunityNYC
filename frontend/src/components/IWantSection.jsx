@@ -7,7 +7,7 @@ import skillPhoto from "../assets/iwant/skill.jpg";
 import studentPhoto from "../assets/iwant/student.jpg";
 
 const items = [
-  { photo: jobPhoto, title: "Find a job", desc: "Browse full-time and part-time listings across all five boroughs.", cta: "Go to Jobs", to: "/search?category=Job" },
+  { photo: jobPhoto, title: "Find a job", desc: "Browse full-time and part-time listings across all five boroughs.", cta: "Go to Jobs", to: "/jobs" },
   { photo: housingPhoto, title: "Find housing", desc: "Emergency shelter, affordable units, and rental assistance programs.", cta: "Go to Housing", to: "#" },
   { photo: foodPhoto, title: "Find food assistance", desc: "Locate the nearest pantry or meal program open today.", cta: "Go to Food", to: "/food" },
   { photo: internshipPhoto, title: "Apply for an internship", desc: "Paid and academic-credit opportunities for students.", cta: "Go to Internships", to: "/search?category=Internship" },

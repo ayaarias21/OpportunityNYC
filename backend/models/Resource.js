@@ -2,28 +2,56 @@ const mongoose = require("mongoose");
 
 const resourceSchema = new mongoose.Schema(
 {
-    title: String,
+    title: {
+        type: String,
+        required: true,
+    },
 
-    type: {
+    organization: {
+        type: String,
+        required: true,
+    },
+
+    category: {
         type: String,
         enum: [
             "Housing",
-            "Food",
+            "Food Assistance",
+            "Workshop",
+            "Student Support",
             "Healthcare",
-            "Education",
-            "Legal"
-        ]
+            "Other"
+        ],
+        required: true,
     },
 
-    borough: String,
+    borough: {
+        type: String,
+        enum: [
+            "Bronx",
+            "Brooklyn",
+            "Manhattan",
+            "Queens",
+            "Staten Island",
+            "Citywide"
+        ],
+        required: true,
+    },
 
-    description: String,
+    description: {
+        type: String,
+        required: true,
+    },
+
+    link: {
+        type: String,
+    },
+
+    contact: {
+        type: String,
+    },
 
     address: String,
-
-    phone: String,
-
-    website: String,
 
     postcode: String,
 
@@ -37,20 +65,18 @@ const resourceSchema = new mongoose.Schema(
 
     sourceId: {
         type: String,
-        index: true
+        index: true,
     },
 
     sourceUrl: String,
 
-    lastSyncedAt: Date
+    lastSyncedAt: Date,
 },
 {
-    timestamps: true
-}
-);
+    timestamps: true,
+});
 
 resourceSchema.index({ sourceDataset: 1, sourceId: 1 }, { unique: true, sparse: true });
-resourceSchema.index({ type: 1, borough: 1 });
-resourceSchema.index({ title: "text", description: "text", address: "text" });
+resourceSchema.index({ category: 1, borough: 1 });
 
 module.exports = mongoose.model("Resource", resourceSchema);

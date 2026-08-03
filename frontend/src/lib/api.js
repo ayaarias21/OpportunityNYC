@@ -11,17 +11,45 @@ async function request(path, options = {}) {
   return response.json();
 }
 
+function normalizeListResponse(payload) {
+  if (Array.isArray(payload)) {
+    return {
+      data: payload,
+      pagination: {
+        page: 1,
+        limit: payload.length,
+        total: payload.length,
+        totalPages: 1,
+      },
+    };
+  }
+
+  return {
+    data: payload.data || [],
+    pagination: payload.pagination || {
+      page: 1,
+      limit: (payload.data || []).length,
+      total: (payload.data || []).length,
+      totalPages: 1,
+    },
+  };
+}
+
 export function getOpportunities(params = {}) {
   const searchParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
-      searchParams.set(key, value);
+      if (key === "q") {
+        searchParams.set("search", value);
+      } else {
+        searchParams.set(key, value);
+      }
     }
   });
 
   const query = searchParams.toString();
-  return request(`/opportunities${query ? `?${query}` : ""}`);
+  return request(`/opportunities${query ? `?${query}` : ""}`).then(normalizeListResponse);
 }
 
 export function getResources(params = {}) {
@@ -29,12 +57,18 @@ export function getResources(params = {}) {
 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
-      searchParams.set(key, value);
+      if (key === "q") {
+        searchParams.set("search", value);
+      } else if (key === "type") {
+        searchParams.set("category", value === "Food" ? "Food Assistance" : value);
+      } else {
+        searchParams.set(key, value);
+      }
     }
   });
 
   const query = searchParams.toString();
-  return request(`/resources${query ? `?${query}` : ""}`);
+  return request(`/resources${query ? `?${query}` : ""}`).then(normalizeListResponse);
 }
 
 export function getSyncStatus() {
@@ -72,7 +106,7 @@ export function formatPostedDate(dateValue) {
 
 export function mapOpportunityToCard(opportunity) {
   const category = opportunity.category || "Job";
-  const badgeType = category === "Job" ? "fulltime" : category.toLowerCase();
+  const badgeType = category === "Job" ? "fulltime" : category.toLowerCase().replace(/\s+/g, "");
   const orgParts = [opportunity.organization || opportunity.agency, opportunity.borough]
     .filter(Boolean)
     .join(" · ");

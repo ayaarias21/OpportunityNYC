@@ -40,7 +40,7 @@ export default function FoodAssistance() {
       setError("");
 
       try {
-        const response = await getResources({ type: "Food", limit: 100 });
+        const response = await getResources({ category: "Food Assistance", limit: 100 });
         if (!cancelled) {
           setResources(response.data || []);
         }
@@ -193,9 +193,9 @@ export default function FoodAssistance() {
                 {resource.hours && (
                   <p className="text-sm text-charcoal mb-4">{resource.hours}</p>
                 )}
-                {resource.website && (
+                {resource.link && (
                   <a
-                    href={resource.website}
+                    href={resource.link}
                     target="_blank"
                     rel="noreferrer"
                     className="text-sm font-semibold text-accent hover:underline"

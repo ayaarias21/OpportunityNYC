@@ -8,69 +8,55 @@ Python scripts that keep OpportunityNYC datasets up to date by pulling live reco
 |-------------|----------------------|--------------------|
 | `snap_centers` | [Directory of SNAP Centers](https://data.cityofnewyork.us/Social-Services/Directory-of-SNAP-Centers/tc6u-8rnp) | `resources` |
 | `jobs_nyc` | [Jobs NYC Postings](https://data.cityofnewyork.us/City-Government/Jobs-NYC-Postings/kpav-sd4t) | `opportunities` |
+| `benefits_access_centers` | [Directory of Benefits Access Centers](https://data.cityofnewyork.us/Business/Directory-of-Benefits-Access-Centers/9d9t-bmk7) | `resources` |
+| `health_insurance_enrollment` | [Health Insurance Enrollment](https://data.cityofnewyork.us/Health/Equitable-Health-Systems-Health-Insurance-Enrollme/gfej-by6h) | `resources` |
+| `benefits_programs` | [NYC Benefits Platform](https://data.cityofnewyork.us/Social-Services/NYC-Benefits-Platform-Benefits-and-Programs-Datase/kvhd-5fmu) | `resources` |
+| `womens_resource_network` | [NYC Women's Resource Network](https://data.cityofnewyork.us/Social-Services/NYC-Women-s-Resource-Network-Database/pqg4-dm6b) | `resources` |
+| `medicaid_offices` | [Medicaid Offices](https://data.cityofnewyork.us/City-Government/Medicaid-Offices/ibs4-k445) | `resources` |
+| `syep_nycha` | [SYEP for NYCHA Residents](https://data.cityofnewyork.us/City-Government/Summer-Youth-Employment-Program-SYEP-for-NYCHA-Res/73rz-5b7x) | `opportunities` |
 
 ## Setup
-
-1. Install dependencies:
 
 ```bash
 cd scripts
 pip install -r requirements.txt
 ```
 
-2. Create `OpportunityNYC/.env` from `.env.example` and set `MONGO_URI`.
+Create `OpportunityNYC/.env`:
 
-3. Run an initial sync:
-
-```bash
-python sync_datasets.py
+```env
+MONGO_URI=mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/opportunitynyc
 ```
 
 ## Commands
 
 ```bash
-# Sync all configured datasets
 python sync_datasets.py
-
-# Sync one dataset
-python sync_datasets.py --dataset snap_centers
-python sync_datasets.py --dataset jobs_nyc
-
-# Preview fetch/transform without writing to MongoDB
+python sync_datasets.py --dataset medicaid_offices
 python sync_datasets.py --dry-run
 ```
 
 ## Scheduling live updates
 
-Run the script on a schedule so the website stays current with NYC Open Data.
+Run daily so data stays current with NYC Open Data.
 
-### Windows Task Scheduler
-
-Create a daily task that runs:
+**Windows Task Scheduler:**
 
 ```powershell
 cd "C:\path\to\OpportunityNYC\scripts"
 python sync_datasets.py
 ```
 
-### Linux/macOS cron
+**cron (Linux/macOS):**
 
 ```cron
-0 6 * * * cd /path/to/OpportunityNYC/scripts && /usr/bin/python3 sync_datasets.py >> sync.log 2>&1
+0 6 * * * cd /path/to/OpportunityNYC/scripts && python3 sync_datasets.py >> sync.log 2>&1
 ```
 
 ## Environment variables
 
 | Variable | Description |
 |----------|-------------|
-| `MONGO_URI` | MongoDB connection string |
+| `MONGO_URI` | MongoDB connection string (Atlas or local) |
 | `NYC_OPEN_DATA_APP_TOKEN` | Optional Socrata app token for higher API limits |
 | `SYNC_PAGE_SIZE` | Records fetched per API page (default: 1000) |
-
-## How sync works
-
-1. Fetch paginated JSON from the NYC Open Data SODA API.
-2. Transform each record into the OpportunityNYC MongoDB schema.
-3. Upsert by `sourceDataset` + `sourceId` so repeated runs update existing records instead of duplicating them.
-4. Remove stale records that no longer appear in the source dataset.
-5. Store sync metadata in the `sync_metadata` collection.

@@ -4,10 +4,13 @@ const opportunitySchema = new mongoose.Schema(
 {
     title: {
         type: String,
-        required: true
+        required: true,
     },
 
-    organization: String,
+    organization: {
+        type: String,
+        required: true,
+    },
 
     category: {
         type: String,
@@ -16,17 +19,37 @@ const opportunitySchema = new mongoose.Schema(
             "Internship",
             "Scholarship",
             "Workshop",
-            "Volunteer"
-        ]
+            "Housing",
+            "Food Assistance"
+        ],
+        required: true,
     },
 
-    borough: String,
+    borough: {
+        type: String,
+        enum: [
+            "Bronx",
+            "Brooklyn",
+            "Manhattan",
+            "Queens",
+            "Staten Island",
+            "Citywide"
+        ],
+        required: true,
+    },
 
-    description: String,
+    description: {
+        type: String,
+        required: true,
+    },
 
-    link: String,
+    link: {
+        type: String,
+    },
 
-    deadline: Date,
+    deadline: {
+        type: Date,
+    },
 
     agency: String,
 
@@ -52,20 +75,18 @@ const opportunitySchema = new mongoose.Schema(
 
     sourceId: {
         type: String,
-        index: true
+        index: true,
     },
 
     sourceUrl: String,
 
-    lastSyncedAt: Date
+    lastSyncedAt: Date,
 },
 {
-    timestamps: true
-}
-);
+    timestamps: true,
+});
 
 opportunitySchema.index({ sourceDataset: 1, sourceId: 1 }, { unique: true, sparse: true });
 opportunitySchema.index({ category: 1, borough: 1 });
-opportunitySchema.index({ title: "text", organization: "text", description: "text", agency: "text" });
 
 module.exports = mongoose.model("Opportunity", opportunitySchema);
