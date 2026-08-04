@@ -19,6 +19,7 @@ export default function Nav() {
           <a href="#" className="hover:text-charcoal">Food</a>
           <a href="#" className="hover:text-charcoal">Education</a>
           <a href="#" className="hover:text-charcoal">Community</a>
+          <Link to="/roadmap" className="hover:text-charcoal">My Roadmap</Link>
         </nav>
 
         <div className="flex items-center gap-3.5">

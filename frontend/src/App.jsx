@@ -4,6 +4,7 @@ import SearchResults from "./pages/SearchResults";
 import JobsPage from "./pages/JobsPage";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
+import Roadmap from "./pages/Roadmap";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/roadmap" element={<Roadmap />} />
       </Routes>
     </BrowserRouter>
   );
