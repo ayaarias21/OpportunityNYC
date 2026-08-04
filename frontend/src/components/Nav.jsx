@@ -22,10 +22,10 @@ export default function Nav() {
         </nav>
 
         <div className="flex items-center gap-3.5">
-          <a href="#" className="text-sm font-semibold text-charcoal hover:underline">Sign In</a>
-          <a href="#" className="text-sm font-semibold bg-accent hover:bg-accent-dark text-white rounded-md px-5 py-2.5">
+          <Link to="/signin" className="text-sm font-semibold text-charcoal hover:underline">Sign In</Link>
+          <Link to="/signup" className="text-sm font-semibold bg-accent hover:bg-accent-dark text-white rounded-md px-5 py-2.5">
             Get Started
-          </a>
+          </Link>
         </div>
       </div>
     </header>
