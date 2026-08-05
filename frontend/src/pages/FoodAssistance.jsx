@@ -16,11 +16,6 @@ const foodTypes = [
     label: "SNAP Benefits",
     desc: "Apply for or renew SNAP (food stamp) benefits, and get help with the application process.",
   },
-  {
-    tint: "bg-sand",
-    label: "Home-Delivered Meals",
-    desc: "Meal delivery for seniors, people with disabilities, and those unable to travel to a pantry.",
-  },
 ];
 
 export default function FoodAssistance() {
@@ -96,7 +91,7 @@ export default function FoodAssistance() {
           <p className="text-warm-gray text-sm">Pick the option that fits your situation.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {foodTypes.map((type) => (
             <div
               key={type.label}
