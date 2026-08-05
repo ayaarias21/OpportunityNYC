@@ -4,12 +4,9 @@ import subwayHero from "../assets/subway-hero.jpg";
 import CategoryPill from "./CategoryPill";
 
 const categories = [
-  { label: "Jobs", dotColor: "#3D6E96", href: "/jobs" },
-  { label: "Internships", dotColor: "#9B8AC4" },
-  { label: "Housing", dotColor: "#6B9E78" },
-  { label: "Food", dotColor: "#E0A94C" },
-  { label: "Workshops", dotColor: "#5B8FA8" },
-  { label: "Student Support", dotColor: "#C97B96" },
+  { label: "Welfare Opportunities", dotColor: "#6B9E78" },
+  { label: "Student Section", dotColor: "#C97B96", href: "/students" },
+  { label: "Job Assistance", dotColor: "#3D6E96", href: "/jobs" },
 ];
 
 export default function Hero() {
@@ -41,18 +38,17 @@ export default function Hero() {
         </div>
 
         <nav className="hidden md:flex gap-7 text-sm font-medium text-cream/85">
-          <Link to="/jobs" className="hover:text-cream">Jobs</Link>
-          <a href="#" className="hover:text-cream">Housing</a>
-          <a href="#" className="hover:text-cream">Food</a>
-          <a href="#" className="hover:text-cream">Education</a>
-          <a href="#" className="hover:text-cream">Community</a>
+          <a href="#" className="hover:text-cream">Welfare Opportunities</a>
+          <Link to="/students" className="hover:text-cream">Student Section</Link>
+          <Link to="/jobs" className="hover:text-cream">Job Assistance</Link>
+          <Link to="/roadmap" className="hover:text-cream">Eligibility Machine</Link>
         </nav>
 
         <div className="flex items-center gap-3.5">
-          <a href="#" className="text-sm font-semibold text-cream hover:underline">Sign In</a>
-          <a href="#" className="text-sm font-semibold bg-accent hover:bg-accent-dark text-white rounded-md px-5 py-2.5">
+          <Link to="/signin" className="text-sm font-semibold text-cream hover:underline">Sign In</Link>
+          <Link to="/signup" className="text-sm font-semibold bg-accent hover:bg-accent-dark text-white rounded-md px-5 py-2.5">
             Get Started
-          </a>
+          </Link>
         </div>
       </div>
 

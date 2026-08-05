@@ -1,18 +1,30 @@
 import { Link } from "react-router-dom";
 import jobPhoto from "../assets/iwant/job.jpg";
 import housingPhoto from "../assets/iwant/housing.jpg";
-import foodPhoto from "../assets/iwant/food.jpg";
-import internshipPhoto from "../assets/iwant/internship.jpg";
-import skillPhoto from "../assets/iwant/skill.jpg";
 import studentPhoto from "../assets/iwant/student.jpg";
 
 const items = [
-  { photo: jobPhoto, title: "Find a job", desc: "Browse full-time and part-time listings across all five boroughs.", cta: "Go to Jobs", to: "/jobs" },
-  { photo: housingPhoto, title: "Find housing", desc: "Emergency shelter, affordable units, and rental assistance programs.", cta: "Go to Housing", to: "#" },
-  { photo: foodPhoto, title: "Find food assistance", desc: "Locate the nearest pantry or meal program open today.", cta: "Go to Food", to: "/food" },
-  { photo: internshipPhoto, title: "Apply for an internship", desc: "Paid and academic-credit opportunities for students.", cta: "Go to Internships", to: "/search?category=Internship" },
-  { photo: skillPhoto, title: "Build a new skill", desc: "Free workshops and certification programs across the city.", cta: "Go to Workshops", to: "/search?category=Workshop" },
-  { photo: studentPhoto, title: "Get student support", desc: "Tutoring, mentorship, and scholarship resources.", cta: "Go to Student Support", to: "/search?category=Scholarship" },
+  {
+    photo: housingPhoto,
+    title: "Welfare Opportunities",
+    desc: "Housing, food assistance, SNAP benefits, and other essential support programs.",
+    cta: "Go to Welfare Opportunities",
+    to: "/food",
+  },
+  {
+    photo: studentPhoto,
+    title: "Student Section",
+    desc: "Internship and scholarship resources for students.",
+    cta: "Go to Student Section",
+    to: "/students",
+  },
+  {
+    photo: jobPhoto,
+    title: "Job Assistance",
+    desc: "Browse full-time and part-time listings across all five boroughs.",
+    cta: "Go to Job Assistance",
+    to: "/jobs",
+  },
 ];
 
 export default function IWantSection() {
