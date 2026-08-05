@@ -107,8 +107,27 @@ const deleteOpportunity = async (req, res) => {
     }
 };
 
+const getOpportunityById = async (req, res) => {
+    try {
+        const opportunity = await Opportunity.findById(req.params.id);
+
+        if (!opportunity) {
+            return res.status(404).json({
+                message: "Opportunity not found",
+            });
+        }
+
+        res.status(200).json(opportunity);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
 module.exports = {
     getOpportunities,
+    getOpportunityById,
     createOpportunity,
     updateOpportunity,
     deleteOpportunity,

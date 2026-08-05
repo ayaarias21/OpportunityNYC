@@ -11,7 +11,8 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 load_dotenv(PROJECT_ROOT / ".env")
 load_dotenv(SCRIPT_DIR / ".env")
 
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://127.0.0.1:27017/opportunitynyc")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://127.0.0.1:27017/OpportunityNYC").strip()
+MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "OpportunityNYC").strip()
 NYC_OPEN_DATA_APP_TOKEN = os.getenv("NYC_OPEN_DATA_APP_TOKEN", "")
 
 NYC_OPEN_DATA_BASE = "https://data.cityofnewyork.us/resource"

@@ -36,13 +36,16 @@ pip install -r requirements.txt
 python sync_datasets.py
 ```
 
+Use database name `OpportunityNYC` (case-sensitive) in `MONGO_URI` / `MONGO_DB_NAME`.
+
 ## API endpoints
 
 - `GET /api/resources?category=&borough=&search=&limit=&page=`
 - `GET /api/opportunities?category=&borough=&search=&limit=&page=`
+- `GET /api/opportunities/:id`
 - `GET /api/sync/status`
 
-When `limit` or `page` is provided, responses include pagination metadata. Without those params, list endpoints return a flat array for backward compatibility.
+When `limit` or `page` is provided, list responses include pagination metadata. Without those params, list endpoints return a flat array for backward compatibility.
 
 ## Connected datasets
 

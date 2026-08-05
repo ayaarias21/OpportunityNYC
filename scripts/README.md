@@ -25,8 +25,11 @@ pip install -r requirements.txt
 Create `OpportunityNYC/.env`:
 
 ```env
-MONGO_URI=mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/opportunitynyc
+MONGO_URI=mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/OpportunityNYC?appName=Cluster0
+MONGO_DB_NAME=OpportunityNYC
 ```
+
+The database name is case-sensitive and must match Atlas exactly (`OpportunityNYC`).
 
 ## Commands
 
@@ -58,5 +61,6 @@ python sync_datasets.py
 | Variable | Description |
 |----------|-------------|
 | `MONGO_URI` | MongoDB connection string (Atlas or local) |
+| `MONGO_DB_NAME` | Database name (default: `OpportunityNYC`) |
 | `NYC_OPEN_DATA_APP_TOKEN` | Optional Socrata app token for higher API limits |
 | `SYNC_PAGE_SIZE` | Records fetched per API page (default: 1000) |

@@ -20,6 +20,7 @@ from pymongo import MongoClient, UpdateOne
 
 from config import (
     DATASETS,
+    MONGO_DB_NAME,
     MONGO_URI,
     NYC_OPEN_DATA_APP_TOKEN,
     NYC_OPEN_DATA_BASE,
@@ -491,7 +492,8 @@ def sync_dataset(client: MongoClient, dataset_key: str, dry_run: bool) -> dict[s
     transformed = [transformer(record, meta) for record in raw_records]
     transformed = [record for record in transformed if record.get("sourceId")]
 
-    collection = client.get_default_database()[meta["collection"]]
+    db = client[MONGO_DB_NAME]
+    collection = db[meta["collection"]]
     synced_count, matched_count = upsert_records(
         collection,
         transformed,
@@ -508,7 +510,7 @@ def sync_dataset(client: MongoClient, dataset_key: str, dry_run: bool) -> dict[s
     )
 
     if not dry_run:
-        update_sync_metadata(client.get_default_database(), dataset_key, meta, len(transformed), dry_run)
+        update_sync_metadata(db, dataset_key, meta, len(transformed), dry_run)
 
     return {
         "dataset": dataset_key,
@@ -524,7 +526,9 @@ def main() -> int:
     args = parse_args()
     dataset_keys = [args.dataset] if args.dataset else list(DATASETS.keys())
 
-    print(f"Connecting to MongoDB: {re.sub(r'://([^:@/]+):([^@/]+)@', r'://\\1:***@', MONGO_URI)}")
+    masked_uri = re.sub(r"://([^:@/]+):([^@/]+)@", r"://\1:***@", MONGO_URI)
+    print(f"Connecting to MongoDB: {masked_uri}")
+    print(f"Database: {MONGO_DB_NAME}")
 
     try:
         client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=10000)
