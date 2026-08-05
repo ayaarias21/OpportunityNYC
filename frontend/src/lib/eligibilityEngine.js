@@ -13,10 +13,10 @@ export function buildRoadmap(answers) {
       title: "SNAP / Food Assistance",
       reason: "Your income bracket falls within typical SNAP eligibility limits.",
       steps: [
-        "Check your household size against SNAP income limits on ACCESS HRA.",
-        "Gather proof of income (pay stubs or benefit letters) and ID.",
-        "Apply online at ACCESS HRA or visit your local SNAP office.",
-        "Complete your eligibility interview (phone or in-person).",
+        { text: "Check your household size against SNAP income limits on ACCESS HRA.", url: "https://a069-access.nyc.gov/" },
+        { text: "Gather proof of income (pay stubs or benefit letters) and ID." },
+        { text: "Apply online at ACCESS HRA or visit your local SNAP office.", url: "https://a069-access.nyc.gov/" },
+        { text: "Complete your eligibility interview (phone or in-person)." },
       ],
     });
   }
@@ -26,10 +26,10 @@ export function buildRoadmap(answers) {
       title: "Emergency Housing Assistance",
       reason: "You indicated your housing situation is unstable or at risk.",
       steps: [
-        "Contact NYC's Homebase homelessness prevention program for your borough.",
-        "Bring proof of income and your current housing situation to your appointment.",
-        "Ask about one-time emergency rental assistance if facing eviction.",
-        "Follow up within 5 business days if you haven't heard back.",
+        { text: "Contact NYC's Homebase homelessness prevention program for your borough.", url: "https://www.nyc.gov/site/hra/help/homebase.page" },
+        { text: "Bring proof of income and your current housing situation to your appointment." },
+        { text: "Ask about one-time emergency rental assistance if facing eviction.", url: "https://access.nyc.gov/programs/one-shot-deal/" },
+        { text: "Follow up within 5 business days if you haven't heard back." },
       ],
     });
   }
@@ -39,10 +39,10 @@ export function buildRoadmap(answers) {
       title: "Rental Assistance Program",
       reason: "You're renting and your income may qualify you for rental assistance.",
       steps: [
-        "Confirm your household income falls within local rental assistance limits.",
-        "Gather your lease and proof of income.",
-        "Apply through your local HRA job center.",
-        "Work with a housing specialist to review your eligible options.",
+        { text: "Confirm your household income falls within local rental assistance limits." },
+        { text: "Gather your lease and proof of income." },
+        { text: "Apply through your local HRA job center.", url: "https://www.nyc.gov/site/hra/locations/locations.page" },
+        { text: "Work with a housing specialist to review your eligible options." },
       ],
     });
   }
@@ -54,9 +54,9 @@ export function buildRoadmap(answers) {
         title: "International Student Support",
         reason: "You identified as an international student.",
         steps: [
-          "Meet with your school's international student office about work-authorization rules (CPT/OPT).",
-          "Ask about scholarships open specifically to international students.",
-          "Check visa-compliant on-campus work-study options.",
+          { text: "Meet with your school's international student office about work-authorization rules (CPT/OPT).", url: "https://www.uscis.gov/working-in-the-united-states/students-and-exchange-visitors/optional-practical-training-opt-for-f-1-students" },
+          { text: "Ask about scholarships open specifically to international students." },
+          { text: "Check visa-compliant on-campus work-study options." },
         ],
       });
     }
@@ -66,9 +66,9 @@ export function buildRoadmap(answers) {
         title: "DACA / Undocumented Student Support",
         reason: "You identified as DACA or undocumented.",
         steps: [
-          "Connect with your school's undocumented student resource center.",
-          "Look into NY State's tuition assistance for undocumented students.",
-          "Ask about scholarship funds open to DACA recipients.",
+          { text: "Connect with your school's undocumented student resource center." },
+          { text: "Look into NY State's tuition assistance for undocumented students.", url: "https://www.hesc.ny.gov/dream/" },
+          { text: "Ask about scholarship funds open to DACA recipients." },
         ],
       });
     }
@@ -78,9 +78,9 @@ export function buildRoadmap(answers) {
         title: "Student Emergency & Basic Needs",
         reason: "You indicated your housing situation is unstable or at risk.",
         steps: [
-          "Contact your school's basic needs or emergency fund office.",
-          "Ask about emergency housing or meal assistance programs.",
-          "Apply for a hardship withdrawal or tuition deferment if needed.",
+          { text: "Contact your school's basic needs or emergency fund office." },
+          { text: "Ask about emergency housing or meal assistance programs." },
+          { text: "Apply for a hardship withdrawal or tuition deferment if needed." },
         ],
       });
     }
@@ -90,9 +90,9 @@ export function buildRoadmap(answers) {
         title: "General Student Support",
         reason: "Based on your answers, these general resources are a good starting point.",
         steps: [
-          "Visit your school's financial aid office to review scholarship options.",
-          "Check tutoring and mentorship programs available on campus.",
-          "Ask about work-study opportunities for next semester.",
+          { text: "Visit your school's financial aid office to review scholarship options." },
+          { text: "Check tutoring and mentorship programs available on campus." },
+          { text: "Ask about work-study opportunities for next semester." },
         ],
       });
     }
@@ -105,10 +105,10 @@ export function buildRoadmap(answers) {
         title: "Job Training & Placement",
         reason: "Based on your target salary range, free training programs may boost your options.",
         steps: [
-          "Visit your local Workforce1 Career Center for free job training.",
-          "Bring a resume, or use their on-site resume help.",
-          "Ask about certification programs in high-demand fields.",
-          "Schedule a one-on-one session with a career coach.",
+          { text: "Visit your local Workforce1 Career Center for free job training.", url: "https://www.nyc.gov/site/sbs/careers/wf1-career-centers.page" },
+          { text: "Bring a resume, or use their on-site resume help." },
+          { text: "Ask about certification programs in high-demand fields." },
+          { text: "Schedule a one-on-one session with a career coach." },
         ],
       });
     } else if (salaryRange === "30to60") {
@@ -116,9 +116,9 @@ export function buildRoadmap(answers) {
         title: "Mid-Level Job Placement",
         reason: "Based on your target salary range, sector-based placement programs are a good fit.",
         steps: [
-          "Register with Workforce1 or a sector-based job program in your field.",
-          "Update your resume and LinkedIn with a career counselor's help.",
-          "Attend a hiring event or job fair in your borough.",
+          { text: "Register with Workforce1 or a sector-based job program in your field.", url: "https://www.nyc.gov/site/sbs/careers/wf1-career-centers.page" },
+          { text: "Update your resume and LinkedIn with a career counselor's help.", url: "https://www.linkedin.com" },
+          { text: "Attend a hiring event or job fair in your borough." },
         ],
       });
     } else if (salaryRange === "60plus") {
@@ -126,9 +126,9 @@ export function buildRoadmap(answers) {
         title: "Career Advancement Resources",
         reason: "Based on your target salary range, upskilling and networking resources are a good fit.",
         steps: [
-          "Explore professional certification or upskilling programs.",
-          "Look for networking events in your industry.",
-          "Consider mentorship programs for career growth.",
+          { text: "Explore professional certification or upskilling programs." },
+          { text: "Look for networking events in your industry." },
+          { text: "Consider mentorship programs for career growth." },
         ],
       });
     }
@@ -138,9 +138,9 @@ export function buildRoadmap(answers) {
         title: "Work Authorization Check",
         reason: "You identified as DACA or undocumented.",
         steps: [
-          "Confirm your current work permit (EAD) is valid and not expiring soon.",
-          "Ask employers directly about their sponsorship or hiring policies.",
-          "Contact a legal aid clinic if you need help renewing your status.",
+          { text: "Confirm your current work permit (EAD) is valid and not expiring soon.", url: "https://www.uscis.gov/i-765" },
+          { text: "Ask employers directly about their sponsorship or hiring policies." },
+          { text: "Contact a legal aid clinic if you need help renewing your status.", url: "https://www.nyc.gov/site/hra/help/immigrant-resources.page" },
         ],
       });
     }
@@ -150,8 +150,8 @@ export function buildRoadmap(answers) {
         title: "Work Authorization Requirements",
         reason: "You identified as an international student seeking work.",
         steps: [
-          "Confirm your visa status allows employment in the U.S.",
-          "Contact an immigration legal service for work-authorization guidance.",
+          { text: "Confirm your visa status allows employment in the U.S.", url: "https://www.uscis.gov/working-in-the-united-states/students-and-exchange-visitors" },
+          { text: "Contact an immigration legal service for work-authorization guidance.", url: "https://www.nyc.gov/site/hra/help/immigrant-resources.page" },
         ],
       });
     }

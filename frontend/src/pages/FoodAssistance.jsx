@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import foodPhoto from "../assets/iwant/food.jpg";
 
 const foodTypes = [
@@ -39,11 +40,10 @@ export default function FoodAssistance() {
           </div>
 
           <nav className="hidden md:flex gap-7 text-sm font-medium text-cream/85">
-            <a href="#" className="hover:text-cream">Jobs</a>
-            <a href="#" className="hover:text-cream">Housing</a>
-            <a href="#" className="hover:text-cream">Food</a>
-            <a href="#" className="hover:text-cream">Education</a>
-            <a href="#" className="hover:text-cream">Community</a>
+            <a href="#" className="hover:text-cream">Welfare Opportunities</a>
+            <Link to="/students" className="hover:text-cream">Student Section</Link>
+            <Link to="/jobs" className="hover:text-cream">Job Assistance</Link>
+            <Link to="/roadmap" className="hover:text-cream">Eligibility Machine</Link>
           </nav>
 
           <div className="flex items-center gap-3.5">

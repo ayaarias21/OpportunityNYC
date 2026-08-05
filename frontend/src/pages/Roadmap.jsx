@@ -6,6 +6,7 @@ import RoadmapResultCard from "../components/RoadmapResultCard";
 import { Button } from "../components/ui/button";
 import { getQuestionsFor } from "../data/roadmapQuestions";
 import { buildRoadmap } from "../lib/eligibilityEngine";
+import roadmapHero from "../assets/roadmap-hero.jpg";
 
 export default function Roadmap() {
   const [started, setStarted] = useState(false);
@@ -46,7 +47,13 @@ export default function Roadmap() {
     <div>
       <Nav />
 
-      <section className="max-w-2xl mx-auto px-6 pt-14 pb-20">
+      <div className="relative">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
+          style={{ backgroundImage: `url(${roadmapHero})` }}
+        />
+
+        <section className="relative max-w-2xl mx-auto px-6 pt-14 pb-20">
         {!started && (
           <div className="text-center">
             <div className="font-sans text-xs tracking-widest uppercase text-accent mb-2.5">
@@ -57,7 +64,7 @@ export default function Roadmap() {
             </h1>
             <p className="text-warm-gray text-sm max-w-md mx-auto mb-8">
               Answer a few short questions and we'll match you to welfare, student, and job
-              assistance programs you may be eligible for — plus a step-by-step checklist to get
+              assistance programs you may be eligible for, plus a step-by-step checklist to get
               started.
             </p>
             <Button variant="accent" size="lg" onClick={() => setStarted(true)}>
@@ -166,7 +173,8 @@ export default function Roadmap() {
             </Button>
           </div>
         )}
-      </section>
+        </section>
+      </div>
 
       <Footer />
     </div>

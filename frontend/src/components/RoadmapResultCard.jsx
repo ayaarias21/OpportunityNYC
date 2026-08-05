@@ -20,29 +20,37 @@ export default function RoadmapResultCard({ title, reason, steps }) {
       <p className="text-sm text-warm-gray mb-4">{reason}</p>
       <ul className="space-y-2.5">
         {steps.map((step, index) => (
-          <li key={step}>
+          <li key={step.text} className="flex items-start gap-3">
             <button
               type="button"
               onClick={() => toggleStep(index)}
-              className="w-full flex items-start gap-3 text-left"
+              aria-label={checked[index] ? "Mark step as not done" : "Mark step as done"}
+              className={`mt-0.5 h-4 w-4 rounded border flex-shrink-0 flex items-center justify-center text-[10px] ${
+                checked[index]
+                  ? "bg-accent border-accent text-white"
+                  : "border-charcoal/25"
+              }`}
             >
-              <span
-                className={`mt-0.5 h-4 w-4 rounded border flex-shrink-0 flex items-center justify-center text-[10px] ${
-                  checked[index]
-                    ? "bg-accent border-accent text-white"
-                    : "border-charcoal/25"
-                }`}
-              >
-                {checked[index] && "✓"}
-              </span>
-              <span
-                className={`text-sm ${
-                  checked[index] ? "text-warm-gray line-through" : "text-charcoal"
-                }`}
-              >
-                {step}
-              </span>
+              {checked[index] && "✓"}
             </button>
+            <span
+              className={`text-sm ${
+                checked[index] ? "text-warm-gray line-through" : "text-charcoal"
+              }`}
+            >
+              {step.url ? (
+                <a
+                  href={step.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-charcoal/25 hover:text-accent hover:decoration-accent"
+                >
+                  {step.text}
+                </a>
+              ) : (
+                step.text
+              )}
+            </span>
           </li>
         ))}
       </ul>
