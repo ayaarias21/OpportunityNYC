@@ -18,4 +18,5 @@ router.post("/", protect, createOpportunity);
 router.put("/:id", protect, updateOpportunity);
 router.delete("/:id", protect, deleteOpportunity);
 
+
 module.exports = router;
