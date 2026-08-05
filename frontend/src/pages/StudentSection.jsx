@@ -19,7 +19,7 @@ export default function StudentSection() {
   return (
     <div className="bg-cream">
       {/* Nav */}
-      <div className="bg-forest">
+      <div className="bg-accent-dark">
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-[34px] h-[34px] rounded-md bg-accent flex items-center justify-center text-white font-sans font-bold text-lg">
@@ -65,7 +65,7 @@ export default function StudentSection() {
             Internships, workshops, and scholarships across all five boroughs.
           </p>
 
-          <form className="flex max-w-lg gap-1.5 bg-forest-dark/55 border border-cream/25 rounded-xl p-1.5 backdrop-blur-sm">
+          <form className="flex max-w-lg gap-1.5 bg-accent-dark/55 border border-cream/25 rounded-xl p-1.5 backdrop-blur-sm">
             <input
               type="text"
               placeholder="Search internships, workshops, or scholarships"
@@ -117,7 +117,7 @@ export default function StudentSection() {
         </div>
       </section>
 
-      <footer className="bg-forest-dark text-cream/75">
+      <footer className="bg-accent-dark text-cream/75">
         <div className="max-w-6xl mx-auto px-6 pt-14 pb-6 grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-8">
           <div>
             <div className="flex items-center gap-2.5 mb-3.5">

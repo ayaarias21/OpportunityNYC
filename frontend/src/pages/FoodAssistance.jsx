@@ -64,13 +64,13 @@ export default function FoodAssistance() {
       >
         <div className="max-w-6xl mx-auto px-6 py-16">
           <div className="inline-block font-sans text-[11px] tracking-widest uppercase text-cream bg-cream/10 border border-cream/25 rounded-md px-3.5 py-2 mb-5">
-            Food Assistance
+            Welfare Opportunities
           </div>
           <h1 className="font-sans font-bold text-white text-4xl leading-tight mb-4 max-w-2xl">
-            Find food assistance near you.
+            Find welfare opportunities near you.
           </h1>
           <p className="text-cream/80 text-lg max-w-xl mb-7">
-            Pantries, meal programs, SNAP benefits, and home delivery across all five boroughs.
+            Includes housing and SNAP, along with pantries, meal programs, and home delivery across all five boroughs.
           </p>
 
           <form className="flex max-w-lg gap-1.5 bg-accent-dark/55 border border-cream/25 rounded-xl p-1.5 backdrop-blur-sm">
@@ -92,7 +92,7 @@ export default function FoodAssistance() {
           <div className="font-sans text-xs tracking-widest uppercase text-accent mb-2.5">
             Ways to Get Help
           </div>
-          <h2 className="font-sans font-bold text-3xl text-charcoal mb-2.5">Types of Food Assistance</h2>
+          <h2 className="font-sans font-bold text-3xl text-charcoal mb-2.5">Types of Welfare Opportunities</h2>
           <p className="text-warm-gray text-sm">Pick the option that fits your situation.</p>
         </div>
 
@@ -122,8 +122,8 @@ export default function FoodAssistance() {
             Resource listings coming soon
           </h2>
           <p className="text-warm-gray text-sm max-w-md mx-auto">
-            We're currently compiling verified pantries, meal programs, and food assistance
-            resources across NYC. Check back soon to search real locations near you.
+            We're currently compiling verified housing, SNAP, pantries, meal programs, and
+            other welfare resources across NYC. Check back soon to search real locations near you.
           </p>
         </div>
       </section>
