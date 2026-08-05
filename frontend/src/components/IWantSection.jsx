@@ -13,12 +13,12 @@ const items = [
   {
     photo: studentPhoto,
     title: "Student Section",
-    desc: "Internship and scholarship resoruces for students.",
+    desc: "Internship and scholarship resources for students.",
     cta: "Go to Student Section",
   },
   {
     photo: jobPhoto,
-    title: "JOb Assistance",
+    title: "Job Assistance",
     desc: "Browse full-time and part-time listings across all five boroughs.",
     cta: "Go to Job Assistance",
   },
