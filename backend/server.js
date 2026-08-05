@@ -8,6 +8,7 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const opportunityRoutes = require("./routes/opportunityRoutes");
 const resourceRoutes = require("./routes/resourceRoutes");
+const syncRoutes = require("./routes/syncRoutes");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/opportunities", opportunityRoutes);
 app.use("/api/resources", resourceRoutes);
+app.use("/api/sync", syncRoutes);
 
 // Test route
 app.get("/", (req, res) => {

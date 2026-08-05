@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import jobPhoto from "../assets/iwant/job.jpg";
 import housingPhoto from "../assets/iwant/housing.jpg";
 import studentPhoto from "../assets/iwant/student.jpg";
@@ -8,22 +9,23 @@ const items = [
     title: "Welfare Opportunities",
     desc: "Housing, food assistance, SNAP benefits, and other essential support programs.",
     cta: "Go to Welfare Opportunities",
- 
+    to: "/food",
   },
   {
     photo: studentPhoto,
     title: "Student Section",
     desc: "Internship and scholarship resources for students.",
     cta: "Go to Student Section",
+    to: "/students",
   },
   {
     photo: jobPhoto,
     title: "Job Assistance",
     desc: "Browse full-time and part-time listings across all five boroughs.",
     cta: "Go to Job Assistance",
+    to: "/jobs",
   },
 ];
-
 
 export default function IWantSection() {
   return (
@@ -54,9 +56,9 @@ export default function IWantSection() {
                 <h3 className="font-sans font-bold text-lg text-charcoal">{item.title}</h3>
                 <hr className="border-t border-warm-gray/30 my-3" />
                 <p className="text-sm text-warm-gray flex-1">{item.desc}</p>
-                <a href="#" className="inline-block mt-4 text-sm font-bold text-accent">
+                <Link to={item.to} className="inline-block mt-4 text-sm font-bold text-accent">
                   {item.cta} →
-                </a>
+                </Link>
               </div>
             </div>
           ))}

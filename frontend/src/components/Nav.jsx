@@ -14,7 +14,7 @@ export default function Nav() {
         </Link>
 
         <nav className="hidden md:flex gap-7 text-sm font-medium text-cream/85">
-          <a href="#" className="hover:text-cream">Welfare Opportunities</a>
+          <Link to="/food" className="hover:text-cream">Welfare Opportunities</Link>
           <Link to="/students" className="hover:text-cream">Student Section</Link>
           <Link to="/jobs" className="hover:text-cream">Job Assistance</Link>
           <Link to="/roadmap" className="hover:text-cream">Eligibility Machine</Link>

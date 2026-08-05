@@ -32,7 +32,8 @@ const resourceSchema = new mongoose.Schema(
             "Brooklyn",
             "Manhattan",
             "Queens",
-            "Staten Island"
+            "Staten Island",
+            "Citywide"
         ],
         required: true,
     },
@@ -48,10 +49,34 @@ const resourceSchema = new mongoose.Schema(
 
     contact: {
         type: String,
-    }
+    },
+
+    address: String,
+
+    postcode: String,
+
+    hours: String,
+
+    latitude: Number,
+
+    longitude: Number,
+
+    sourceDataset: String,
+
+    sourceId: {
+        type: String,
+        index: true,
+    },
+
+    sourceUrl: String,
+
+    lastSyncedAt: Date,
 },
 {
     timestamps: true,
 });
+
+resourceSchema.index({ sourceDataset: 1, sourceId: 1 }, { unique: true, sparse: true });
+resourceSchema.index({ category: 1, borough: 1 });
 
 module.exports = mongoose.model("Resource", resourceSchema);

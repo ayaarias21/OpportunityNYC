@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import HelpButton from "../components/HelpButton";
 import OppCard from "../components/OppCard";
 import jobPhoto from "../assets/iwant/job-assistance.jpg";
+import { getOpportunities, mapOpportunityToCard } from "../lib/api";
 
 const jobTypes = [
   {
@@ -27,24 +29,52 @@ const jobTypes = [
   },
 ];
 
-const jobs = [
-  {
-    badgeType: "fulltime",
-    badgeLabel: "FULL-TIME",
-    title: "Community Health Outreach Coordinator",
-    org: "NYC Dept. of Health · Brooklyn",
-    posted: "Posted 2 days ago",
-  },
-  {
-    badgeType: "fulltime",
-    badgeLabel: "FULL-TIME",
-    title: "Emergency Housing Case Manager",
-    org: "NYC Dept. of Social Services · Bronx",
-    posted: "Posted 3 days ago",
-  },
-];
-
 export default function JobsPage() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadJobs() {
+      try {
+        const response = await getOpportunities({ category: "Job", limit: 60 });
+        if (!cancelled) {
+          setJobs((response.data || []).map(mapOpportunityToCard));
+        }
+      } catch (fetchError) {
+        if (!cancelled) {
+          setJobs([]);
+          setError(fetchError.message || "Could not load job listings.");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadJobs();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const filteredJobs = jobs.filter((job) => {
+    if (!searchValue.trim()) {
+      return true;
+    }
+
+    const haystack = `${job.title} ${job.org} ${job.badgeLabel}`.toLowerCase();
+    return haystack.includes(searchValue.trim().toLowerCase());
+  });
+
+  function handleSearchSubmit(event) {
+    event.preventDefault();
+  }
+
   return (
     <div className="bg-cream">
       <Nav />
@@ -68,9 +98,14 @@ export default function JobsPage() {
             boroughs.
           </p>
 
-          <form className="flex max-w-lg gap-1.5 bg-accent-dark/55 border border-cream/25 rounded-xl p-1.5 backdrop-blur-sm">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="flex max-w-lg gap-1.5 bg-accent-dark/55 border border-cream/25 rounded-xl p-1.5 backdrop-blur-sm"
+          >
             <input
               type="text"
+              value={searchValue}
+              onChange={(event) => setSearchValue(event.target.value)}
               placeholder="Enter your zip code or borough"
               className="flex-1 bg-transparent outline-none px-4 text-cream placeholder:text-cream/55"
             />
@@ -115,15 +150,32 @@ export default function JobsPage() {
               Open Positions
             </div>
             <h2 className="font-sans font-bold text-3xl text-charcoal mb-2.5">
-              {jobs.length} {jobs.length === 1 ? "opportunity" : "opportunities"} found
+              {loading
+                ? "Loading..."
+                : `${filteredJobs.length} ${filteredJobs.length === 1 ? "opportunity" : "opportunities"} found`}
             </h2>
+            <p className="text-warm-gray text-sm">
+              Live NYC job postings synced from NYC Open Data
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[22px]">
-            {jobs.map((opp) => (
-              <OppCard key={opp.title} {...opp} />
-            ))}
-          </div>
+          {error && (
+            <p className="text-center text-sm text-red-700 mb-6">
+              {error} Run the Python sync script and backend server to populate live data.
+            </p>
+          )}
+
+          {!loading && filteredJobs.length === 0 && !error ? (
+            <p className="text-center text-warm-gray text-sm">
+              Job listings will appear here after the NYC Open Data sync runs.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-[22px]">
+              {filteredJobs.map((opp) => (
+                <OppCard key={opp.id || opp.title} {...opp} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

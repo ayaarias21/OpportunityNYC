@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import SearchResults from "./pages/SearchResults";
+import FoodAssistance from "./pages/FoodAssistance";
 import JobsPage from "./pages/JobsPage";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
@@ -13,6 +14,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/search" element={<SearchResults />} />
+        <Route path="/food" element={<FoodAssistance />} />
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
