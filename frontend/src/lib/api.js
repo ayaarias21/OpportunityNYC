@@ -75,6 +75,10 @@ export function getSyncStatus() {
   return request("/sync/status");
 }
 
+export function getOpportunityById(id) {
+  return request(`/opportunities/${id}`);
+}
+
 export function formatPostedDate(dateValue) {
   if (!dateValue) {
     return "Recently posted";
@@ -107,16 +111,16 @@ export function formatPostedDate(dateValue) {
 export function mapOpportunityToCard(opportunity) {
   const category = opportunity.category || "Job";
   const badgeType = category === "Job" ? "fulltime" : category.toLowerCase().replace(/\s+/g, "");
-  const orgParts = [opportunity.organization || opportunity.agency, opportunity.borough]
-    .filter(Boolean)
-    .join(" · ");
 
   return {
     id: opportunity._id,
     badgeType,
     badgeLabel: category.toUpperCase(),
     title: opportunity.title,
-    org: orgParts || "NYC Opportunity",
+    org: opportunity.organization || opportunity.agency || "NYC Opportunity",
+    borough: opportunity.borough,
+    careerLevel: opportunity.careerLevel,
+    requiresCivilServiceExam: Boolean(opportunity.requiresCivilServiceExam),
     posted: formatPostedDate(opportunity.postingDate || opportunity.createdAt),
     link: opportunity.link,
     salarySummary: opportunity.salarySummary,

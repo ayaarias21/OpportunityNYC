@@ -89,6 +89,27 @@ def sync_timestamp() -> datetime:
     return datetime.now(timezone.utc)
 
 
+CAREER_LEVEL_MAP = {
+    "entry-level": "Entry Level",
+    "student": "Entry Level",
+    "experienced (non-manager)": "Mid Level",
+    "manager": "Senior Level",
+    "executive": "Senior Level",
+}
+
+
+def normalize_career_level(value: str | None) -> str | None:
+    if not value:
+        return None
+    return CAREER_LEVEL_MAP.get(value.strip().lower())
+
+
+def requires_civil_service_exam(title_classification: str | None) -> bool:
+    if not title_classification:
+        return False
+    return title_classification.strip().lower().startswith("competitive")
+
+
 def base_provenance(meta: dict[str, str], source_id: str) -> dict[str, Any]:
     return {
         "sourceDataset": meta["source_dataset"],
@@ -202,6 +223,8 @@ def transform_job_posting(record: dict[str, Any], meta: dict[str, str]) -> dict[
         "salarySummary": " ".join(salary_parts) if salary_parts else None,
         "employmentType": employment_label,
         "jobCategory": record.get("job_category"),
+        "careerLevel": normalize_career_level(record.get("career_level")),
+        "requiresCivilServiceExam": requires_civil_service_exam(record.get("title_classification")),
         "postingDate": parse_date(record.get("posting_date")),
         "postingUpdated": parse_date(record.get("posting_updated")),
         **base_provenance(meta, record.get("job_id")),

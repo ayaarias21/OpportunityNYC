@@ -11,6 +11,10 @@ const buildOpportunityFilter = (queryParams) => {
         filter.category = queryParams.category;
     }
 
+    if (queryParams.careerLevel) {
+        filter.careerLevel = queryParams.careerLevel;
+    }
+
     const searchTerm = queryParams.search || queryParams.q;
     if (searchTerm) {
         filter.$or = [
