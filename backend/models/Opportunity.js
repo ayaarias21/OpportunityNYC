@@ -67,6 +67,16 @@ const opportunitySchema = new mongoose.Schema(
 
     jobCategory: String,
 
+    careerLevel: {
+        type: String,
+        enum: ["Entry Level", "Mid Level", "Senior Level"],
+    },
+
+    requiresCivilServiceExam: {
+        type: Boolean,
+        default: false,
+    },
+
     postingDate: Date,
 
     postingUpdated: Date,

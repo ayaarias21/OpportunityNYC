@@ -11,6 +11,7 @@ const jobTypes = [
     tint: "bg-sage-tint",
     label: "Job Listings",
     desc: "Full-time and part-time openings with NYC agencies and partner organizations across the five boroughs.",
+    anchor: "#open-positions",
   },
   {
     tint: "bg-peach-tint",
@@ -29,10 +30,13 @@ const jobTypes = [
   },
 ];
 
+const levelFilters = ["All Levels", "Entry Level", "Mid Level", "Senior Level"];
+
 export default function JobsPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
+  const [levelFilter, setLevelFilter] = useState("All Levels");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -40,7 +44,7 @@ export default function JobsPage() {
 
     async function loadJobs() {
       try {
-        const response = await getOpportunities({ category: "Job", limit: 60 });
+        const response = await getOpportunities({ category: "Job", limit: 200 });
         if (!cancelled) {
           setJobs((response.data || []).map(mapOpportunityToCard));
         }
@@ -63,6 +67,10 @@ export default function JobsPage() {
   }, []);
 
   const filteredJobs = jobs.filter((job) => {
+    if (levelFilter !== "All Levels" && job.careerLevel !== levelFilter) {
+      return false;
+    }
+
     if (!searchValue.trim()) {
       return true;
     }
@@ -127,23 +135,36 @@ export default function JobsPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {jobTypes.map((type) => (
-            <div
-              key={type.label}
-              className="bg-white border-2 border-charcoal rounded-xl p-7 flex gap-5 items-start"
-            >
-              <div className={`w-12 h-12 rounded-lg ${type.tint} flex-shrink-0`} />
-              <div>
-                <h3 className="font-sans font-bold text-lg text-charcoal mb-1.5">{type.label}</h3>
-                <p className="text-sm text-warm-gray">{type.desc}</p>
+          {jobTypes.map((type) => {
+            const cardClasses =
+              "bg-white border-2 border-charcoal rounded-xl p-7 flex gap-5 items-start" +
+              (type.anchor ? " hover:shadow-md transition-shadow cursor-pointer" : "");
+
+            const content = (
+              <>
+                <div className={`w-12 h-12 rounded-lg ${type.tint} flex-shrink-0`} />
+                <div>
+                  <h3 className="font-sans font-bold text-lg text-charcoal mb-1.5">{type.label}</h3>
+                  <p className="text-sm text-warm-gray">{type.desc}</p>
+                </div>
+              </>
+            );
+
+            return type.anchor ? (
+              <a key={type.label} href={type.anchor} className={cardClasses}>
+                {content}
+              </a>
+            ) : (
+              <div key={type.label} className={cardClasses}>
+                {content}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       {/* Open positions */}
-      <section className="bg-sand">
+      <section id="open-positions" className="bg-sand">
         <div className="max-w-6xl mx-auto px-6 py-16">
           <div className="text-center mb-11">
             <div className="font-sans text-xs tracking-widest uppercase text-accent mb-2.5">
@@ -157,6 +178,23 @@ export default function JobsPage() {
             <p className="text-warm-gray text-sm">
               Live NYC job postings synced from NYC Open Data
             </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-2.5 mb-10">
+            {levelFilters.map((level) => (
+              <button
+                key={level}
+                type="button"
+                onClick={() => setLevelFilter(level)}
+                className={`font-sans text-xs font-semibold tracking-wide px-4 py-2 rounded-full border-2 transition-colors ${
+                  levelFilter === level
+                    ? "bg-charcoal text-cream border-charcoal"
+                    : "bg-white text-charcoal border-charcoal/15 hover:border-charcoal/40"
+                }`}
+              >
+                {level}
+              </button>
+            ))}
           </div>
 
           {error && (
