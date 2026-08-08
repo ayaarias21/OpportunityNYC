@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import HelpButton from "../components/HelpButton";
 import OppBadge from "../components/OppBadge";
 import { formatDescriptionSections, getOpportunityById } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
 
 function formatDate(value) {
   if (!value) return null;
@@ -15,6 +16,8 @@ function formatDate(value) {
 
 export default function JobDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { user, savedIds, toggleSave } = useAuth();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -50,6 +53,15 @@ export default function JobDetail() {
 
   const badgeType = job?.category === "Job" ? "fulltime" : (job?.category || "").toLowerCase().replace(/\s+/g, "");
   const postedDate = formatDate(job?.postingDate || job?.createdAt);
+  const isSaved = Boolean(job) && savedIds.has(String(job._id));
+
+  function handleSaveClick() {
+    if (!user) {
+      navigate("/signin");
+      return;
+    }
+    toggleSave(job._id);
+  }
 
   return (
     <div className="bg-cream min-h-screen">
@@ -151,16 +163,42 @@ export default function JobDetail() {
               </div>
             )}
 
-            {job.link && (
-              <a
-                href={job.link}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-block bg-forest hover:bg-forest-dark text-white font-semibold text-sm rounded-xl px-6 py-3"
+            <div className="flex flex-wrap items-center gap-3">
+              {job.link && (
+                <a
+                  href={job.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block bg-forest hover:bg-forest-dark text-white font-semibold text-sm rounded-xl px-6 py-3"
+                >
+                  Apply on NYC Jobs →
+                </a>
+              )}
+              <button
+                type="button"
+                onClick={handleSaveClick}
+                aria-pressed={isSaved}
+                className={`inline-flex items-center gap-2 font-semibold text-sm rounded-xl px-6 py-3 border-2 transition-colors ${
+                  isSaved
+                    ? "bg-accent/10 border-accent text-accent"
+                    : "bg-white border-charcoal/15 text-charcoal hover:border-charcoal/40"
+                }`}
               >
-                Apply on NYC Jobs →
-              </a>
-            )}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className={`w-4 h-4 ${isSaved ? "fill-accent stroke-accent" : "fill-none stroke-charcoal"}`}
+                  strokeWidth="2"
+                >
+                  <path
+                    d="M6 3.5h12a1 1 0 0 1 1 1V21l-7-4-7 4V4.5a1 1 0 0 1 1-1Z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {isSaved ? "Saved" : "Save"}
+              </button>
+            </div>
           </article>
         )}
       </section>

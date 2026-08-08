@@ -39,6 +39,11 @@ const userSchema = new mongoose.Schema(
 
     interests: [{
         type: String
+    }],
+
+    savedOpportunities: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Opportunity"
     }]
 },
 {
