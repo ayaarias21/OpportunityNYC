@@ -31,16 +31,26 @@ const buildOpportunityFilter = (queryParams) => {
     return filter;
 };
 
+const SORT_OPTIONS = {
+    recent: { postingDate: -1, createdAt: -1 },
+    oldest: { postingDate: 1, createdAt: 1 },
+    "title-asc": { title: 1 },
+    "title-desc": { title: -1 },
+};
+
+const buildOpportunitySort = (sortParam) => SORT_OPTIONS[sortParam] || SORT_OPTIONS.recent;
+
 const getOpportunities = async (req, res) => {
     try {
         const filter = buildOpportunityFilter(req.query);
+        const sort = buildOpportunitySort(req.query.sort);
         const limit = Math.min(parseInt(req.query.limit, 10) || 50, 200);
         const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
         const skip = (page - 1) * limit;
         const usePagination = Boolean(req.query.limit || req.query.page);
 
         const query = Opportunity.find(filter)
-            .sort({ postingDate: -1, createdAt: -1 })
+            .sort(sort)
             .skip(skip)
             .limit(limit);
 
@@ -61,8 +71,7 @@ const getOpportunities = async (req, res) => {
             });
         }
 
-        const opportunities = await Opportunity.find(filter)
-            .sort({ postingDate: -1, createdAt: -1 });
+        const opportunities = await Opportunity.find(filter).sort(sort);
 
         res.status(200).json(opportunities);
     } catch (error) {

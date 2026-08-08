@@ -124,6 +124,42 @@ export function summarizeText(text, sentenceCount = 3, maxLength = 260) {
   return `${truncated.slice(0, truncated.lastIndexOf(" "))}…`;
 }
 
+function parseDescriptionSection(text) {
+  const markerPattern = /(?:^|\s)([1-9][0-9]?)\.\s+(?=[A-Z(])/g;
+  const matches = [...text.matchAll(markerPattern)];
+  const numbers = matches.map((match) => parseInt(match[1], 10));
+
+  const isSequentialList =
+    numbers.length >= 3 &&
+    numbers[0] === 1 &&
+    numbers.every((num, index) => index === 0 || num === numbers[index - 1] + 1);
+
+  if (!isSequentialList) {
+    return { type: "paragraph", text };
+  }
+
+  const intro = text.slice(0, matches[0].index).trim();
+  const items = matches.map((match, index) => {
+    const start = match.index + match[0].length;
+    const end = index + 1 < matches.length ? matches[index + 1].index : text.length;
+    return text.slice(start, end).trim();
+  });
+
+  return { type: "list", intro, items };
+}
+
+export function formatDescriptionSections(description) {
+  if (!description) {
+    return [];
+  }
+
+  return description
+    .split(/\n{2,}/)
+    .map((section) => section.trim())
+    .filter(Boolean)
+    .map(parseDescriptionSection);
+}
+
 export function mapOpportunityToCard(opportunity) {
   const category = opportunity.category || "Job";
   const badgeType = category === "Job" ? "fulltime" : category.toLowerCase().replace(/\s+/g, "");

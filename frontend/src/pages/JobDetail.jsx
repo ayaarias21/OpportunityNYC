@@ -4,7 +4,7 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import HelpButton from "../components/HelpButton";
 import OppBadge from "../components/OppBadge";
-import { getOpportunityById } from "../lib/api";
+import { formatDescriptionSections, getOpportunityById } from "../lib/api";
 
 function formatDate(value) {
   if (!value) return null;
@@ -128,7 +128,26 @@ export default function JobDetail() {
             {job.description && (
               <div className="mb-8">
                 <div className="text-xs uppercase tracking-widest text-accent mb-2">Description</div>
-                <p className="text-sm text-charcoal whitespace-pre-line leading-relaxed">{job.description}</p>
+                <div className="space-y-4">
+                  {formatDescriptionSections(job.description).map((section, index) =>
+                    section.type === "list" ? (
+                      <div key={index}>
+                        {section.intro && (
+                          <p className="text-sm text-charcoal leading-relaxed mb-2">{section.intro}</p>
+                        )}
+                        <ul className="list-disc pl-5 space-y-1.5 text-sm text-charcoal leading-relaxed">
+                          {section.items.map((item, itemIndex) => (
+                            <li key={itemIndex}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <p key={index} className="text-sm text-charcoal leading-relaxed">
+                        {section.text}
+                      </p>
+                    )
+                  )}
+                </div>
               </div>
             )}
 

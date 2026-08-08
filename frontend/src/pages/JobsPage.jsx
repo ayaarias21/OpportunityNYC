@@ -36,21 +36,43 @@ const jobTypes = [
 
 const levelFilters = ["All Levels", "Entry Level", "Mid Level", "Senior Level"];
 
+const sortOptions = [
+  { value: "recent", label: "Most Recently Posted" },
+  { value: "oldest", label: "Oldest First" },
+  { value: "title-asc", label: "Title (A-Z)" },
+  { value: "title-desc", label: "Title (Z-A)" },
+];
+
+const PAGE_SIZE = 50;
+
 export default function JobsPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [levelFilter, setLevelFilter] = useState("All Levels");
+  const [sortBy, setSortBy] = useState("recent");
   const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalJobs, setTotalJobs] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
 
     async function loadJobs() {
+      setLoading(true);
       try {
-        const response = await getOpportunities({ category: "Job", limit: 200 });
+        const response = await getOpportunities({
+          category: "Job",
+          limit: PAGE_SIZE,
+          page,
+          sort: sortBy,
+          careerLevel: levelFilter !== "All Levels" ? levelFilter : undefined,
+        });
         if (!cancelled) {
           setJobs((response.data || []).map(mapOpportunityToCard));
+          setTotalPages(response.pagination?.totalPages || 1);
+          setTotalJobs(response.pagination?.total ?? (response.data || []).length);
         }
       } catch (fetchError) {
         if (!cancelled) {
@@ -68,13 +90,9 @@ export default function JobsPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [page, levelFilter, sortBy]);
 
   const filteredJobs = jobs.filter((job) => {
-    if (levelFilter !== "All Levels" && job.careerLevel !== levelFilter) {
-      return false;
-    }
-
     if (!searchValue.trim()) {
       return true;
     }
@@ -85,6 +103,16 @@ export default function JobsPage() {
 
   function handleSearchSubmit(event) {
     event.preventDefault();
+  }
+
+  function handleLevelFilterChange(level) {
+    setLevelFilter(level);
+    setPage(1);
+  }
+
+  function handleSortChange(event) {
+    setSortBy(event.target.value);
+    setPage(1);
   }
 
   return (
@@ -182,19 +210,19 @@ export default function JobsPage() {
             <h2 className="font-sans font-bold text-3xl text-charcoal mb-2.5">
               {loading
                 ? "Loading..."
-                : `${filteredJobs.length} ${filteredJobs.length === 1 ? "opportunity" : "opportunities"} found`}
+                : `${totalJobs} ${totalJobs === 1 ? "opportunity" : "opportunities"} found`}
             </h2>
             <p className="text-warm-gray text-sm">
               Live NYC job postings synced from NYC Open Data
             </p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-2.5 mb-10">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mb-10">
             {levelFilters.map((level) => (
               <button
                 key={level}
                 type="button"
-                onClick={() => setLevelFilter(level)}
+                onClick={() => handleLevelFilterChange(level)}
                 className={`font-sans text-xs font-semibold tracking-wide px-4 py-2 rounded-full border-2 transition-colors ${
                   levelFilter === level
                     ? "bg-charcoal text-cream border-charcoal"
@@ -204,6 +232,23 @@ export default function JobsPage() {
                 {level}
               </button>
             ))}
+
+            <label className="flex items-center gap-2 ml-1">
+              <span className="font-sans text-xs font-semibold tracking-wide text-warm-gray">
+                Sort by
+              </span>
+              <select
+                value={sortBy}
+                onChange={handleSortChange}
+                className="font-sans text-xs font-semibold tracking-wide px-3.5 py-2 rounded-full border-2 border-charcoal/15 bg-white text-charcoal cursor-pointer hover:border-charcoal/40"
+              >
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
 
           {error && (
@@ -217,11 +262,39 @@ export default function JobsPage() {
               Job listings will appear here after the NYC Open Data sync runs.
             </p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-[22px]">
-              {filteredJobs.map((opp) => (
-                <OppCard key={opp.id || opp.title} {...opp} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-[22px]">
+                {filteredJobs.map((opp) => (
+                  <OppCard key={opp.id || opp.title} {...opp} />
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-4 mt-11">
+                  <button
+                    type="button"
+                    onClick={() => setPage((current) => Math.max(1, current - 1))}
+                    disabled={page <= 1 || loading}
+                    aria-label="Previous page"
+                    className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-charcoal bg-white text-charcoal font-semibold disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:border-charcoal/60"
+                  >
+                    ←
+                  </button>
+                  <span className="font-sans text-sm font-semibold text-charcoal">
+                    Page {page} of {totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+                    disabled={page >= totalPages || loading}
+                    aria-label="Next page"
+                    className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-charcoal bg-white text-charcoal font-semibold disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:border-charcoal/60"
+                  >
+                    →
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
