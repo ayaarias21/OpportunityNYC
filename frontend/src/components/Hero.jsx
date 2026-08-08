@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import subwayHero from "../assets/subway-hero.jpg";
 import CategoryPill from "./CategoryPill";
+import { useAuth } from "../context/AuthContext";
 
 const categories = [
   { label: "Welfare Opportunities", dotColor: "#6B9E78" },
@@ -12,10 +13,16 @@ const categories = [
 export default function Hero() {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const { user, loading, logout } = useAuth();
 
   function handleSearchSubmit(e) {
     e.preventDefault();
     navigate(`/search?q=${encodeURIComponent(query)}`);
+  }
+
+  function handleSignOut() {
+    logout();
+    navigate("/");
   }
 
   return (
@@ -45,10 +52,30 @@ export default function Hero() {
         </nav>
 
         <div className="flex items-center gap-3.5">
-          <Link to="/signin" className="text-sm font-semibold text-cream hover:underline">Sign In</Link>
-          <Link to="/signup" className="text-sm font-semibold bg-accent hover:bg-accent-dark text-white rounded-md px-5 py-2.5">
-            Get Started
-          </Link>
+          {loading ? null : user ? (
+            <>
+              <Link to="/saved" className="text-sm font-semibold text-cream hover:underline">
+                Saved
+              </Link>
+              <span className="text-sm font-medium text-cream/85">
+                Hi, {user.firstName}
+              </span>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="text-sm font-semibold text-cream hover:underline"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/signin" className="text-sm font-semibold text-cream hover:underline">Sign In</Link>
+              <Link to="/signup" className="text-sm font-semibold bg-accent hover:bg-accent-dark text-white rounded-md px-5 py-2.5">
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </div>
 

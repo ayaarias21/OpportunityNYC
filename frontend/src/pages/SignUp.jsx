@@ -4,11 +4,13 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { Button } from "../components/ui/button";
 import subwayHero from "../assets/subway-hero.jpg";
+import { useAuth } from "../context/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5050/api";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -51,6 +53,7 @@ export default function SignUp() {
         throw new Error(data.message || "Something went wrong. Please try again.");
       }
 
+      login(data.token, data.user);
       navigate("/");
     } catch (err) {
       setError(err.message);

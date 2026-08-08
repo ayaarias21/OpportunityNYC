@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import OppBadge from "./OppBadge";
+import { useAuth } from "../context/AuthContext";
 
 export default function OppCard({
   id,
@@ -15,6 +16,8 @@ export default function OppCard({
   salarySummary,
 }) {
   const navigate = useNavigate();
+  const { user, savedIds, toggleSave } = useAuth();
+  const isSaved = Boolean(id) && savedIds.has(String(id));
 
   function goToDetail() {
     if (id) {
@@ -29,14 +32,46 @@ export default function OppCard({
     }
   }
 
+  function handleSaveClick(event) {
+    event.stopPropagation();
+    if (!user) {
+      navigate("/signin");
+      return;
+    }
+    toggleSave(id);
+  }
+
   return (
     <div
       role={id ? "link" : undefined}
       tabIndex={id ? 0 : undefined}
       onClick={goToDetail}
       onKeyDown={handleKeyDown}
-      className={`bg-white rounded-xl overflow-hidden border border-charcoal/[0.07] shadow-sm hover:shadow-md transition-shadow ${id ? "cursor-pointer" : ""}`}
+      className={`relative bg-white rounded-xl overflow-hidden border border-charcoal/[0.07] shadow-sm hover:shadow-md transition-shadow ${id ? "cursor-pointer" : ""}`}
     >
+      {id && (
+        <button
+          type="button"
+          onClick={handleSaveClick}
+          aria-label={isSaved ? "Remove from saved opportunities" : "Save opportunity"}
+          aria-pressed={isSaved}
+          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 border border-charcoal/[0.07] shadow-sm hover:bg-white"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            className={`w-4 h-4 ${isSaved ? "fill-accent stroke-accent" : "fill-none stroke-warm-gray"}`}
+            strokeWidth="2"
+          >
+            <path
+              d="M6 3.5h12a1 1 0 0 1 1 1V21l-7-4-7 4V4.5a1 1 0 0 1 1-1Z"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+      )}
+
       <div className="p-[22px]">
         <div className="flex items-center gap-2 mb-3">
           <OppBadge type={badgeType}>{badgeLabel}</OppBadge>
@@ -51,7 +86,7 @@ export default function OppCard({
             </span>
           )}
         </div>
-        <h3 className="font-sans font-semibold text-[17px] mb-1.5">{title}</h3>
+        <h3 className="font-sans font-semibold text-[17px] mb-1.5 pr-8">{title}</h3>
         <div className="text-sm text-warm-gray">{org}</div>
         {salarySummary && (
           <div className="text-sm text-charcoal mt-2">{salarySummary}</div>

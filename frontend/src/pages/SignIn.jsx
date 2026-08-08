@@ -4,11 +4,13 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { Button } from "../components/ui/button";
 import nycTrainSkyline from "../assets/nyc-train-skyline.png";
+import { useAuth } from "../context/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5050/api";
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,7 +37,7 @@ export default function SignIn() {
         throw new Error(data.message || "Something went wrong. Please try again.");
       }
 
-      localStorage.setItem("token", data.token);
+      login(data.token, data.user);
       navigate("/");
     } catch (err) {
       setError(err.message);

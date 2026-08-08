@@ -98,6 +98,32 @@ export function getOpportunityById(id) {
   return request(`/opportunities/${id}`);
 }
 
+export function getCurrentUser(token) {
+  return request("/users/me", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export function getSavedOpportunities(token) {
+  return request("/users/saved", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export function saveOpportunity(token, opportunityId) {
+  return request(`/users/saved/${opportunityId}`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export function unsaveOpportunity(token, opportunityId) {
+  return request(`/users/saved/${opportunityId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
 export function formatPostedDate(dateValue) {
   if (!dateValue) {
     return "Recently posted";
