@@ -108,6 +108,22 @@ export function formatPostedDate(dateValue) {
   return `Posted ${Math.floor(diffDays / 7)} weeks ago`;
 }
 
+export function summarizeText(text, sentenceCount = 3, maxLength = 260) {
+  if (!text) {
+    return "";
+  }
+
+  const sentences = text.trim().match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text.trim()];
+  const summary = sentences.slice(0, sentenceCount).join(" ").replace(/\s+/g, " ").trim();
+
+  if (summary.length <= maxLength) {
+    return summary;
+  }
+
+  const truncated = summary.slice(0, maxLength);
+  return `${truncated.slice(0, truncated.lastIndexOf(" "))}…`;
+}
+
 export function mapOpportunityToCard(opportunity) {
   const category = opportunity.category || "Job";
   const badgeType = category === "Job" ? "fulltime" : category.toLowerCase().replace(/\s+/g, "");

@@ -4,6 +4,9 @@ import SearchResults from "./pages/SearchResults";
 import FoodAssistance from "./pages/FoodAssistance";
 import JobsPage from "./pages/JobsPage";
 import JobDetail from "./pages/JobDetail";
+import JobTraining from "./pages/JobTraining";
+import ResumeInterviewHelp from "./pages/ResumeInterviewHelp";
+import CareerCounseling from "./pages/CareerCounseling";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Roadmap from "./pages/Roadmap";
@@ -17,6 +20,9 @@ export default function App() {
         <Route path="/search" element={<SearchResults />} />
         <Route path="/food" element={<FoodAssistance />} />
         <Route path="/jobs" element={<JobsPage />} />
+        <Route path="/jobs/training" element={<JobTraining />} />
+        <Route path="/jobs/resume-help" element={<ResumeInterviewHelp />} />
+        <Route path="/jobs/career-counseling" element={<CareerCounseling />} />
         <Route path="/jobs/:id" element={<JobDetail />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
