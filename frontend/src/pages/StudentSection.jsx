@@ -55,9 +55,6 @@ export default function StudentSection() {
         }}
       >
         <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="inline-block font-sans text-[11px] tracking-widest uppercase text-cream bg-cream/10 border border-cream/25 rounded-md px-3.5 py-2 mb-5">
-            Student Section
-          </div>
           <h1 className="font-sans font-bold text-white text-4xl leading-tight mb-4 max-w-2xl">
             Resources built for NYC students.
           </h1>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import HelpButton from "../components/HelpButton";
@@ -17,16 +18,19 @@ const jobTypes = [
     tint: "bg-peach-tint",
     label: "Job Training & Placement",
     desc: "Free training programs and placement support through Workforce1 Career Centers.",
+    to: "/jobs/training",
   },
   {
     tint: "bg-lavender",
     label: "Resume & Interview Help",
     desc: "One-on-one help building your resume, preparing for interviews, and applying with confidence.",
+    to: "/jobs/resume-help",
   },
   {
     tint: "bg-sand",
     label: "Career Counseling",
     desc: "Guidance on career paths, certifications, and next steps from a career coach.",
+    to: "/jobs/career-counseling",
   },
 ];
 
@@ -95,9 +99,6 @@ export default function JobsPage() {
         }}
       >
         <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="inline-block font-sans text-[11px] tracking-widest uppercase text-cream bg-cream/10 border border-cream/25 rounded-md px-3.5 py-2 mb-5">
-            Job Assistance
-          </div>
           <h1 className="font-sans font-bold text-white text-4xl leading-tight mb-4 max-w-2xl">
             Find job assistance near you.
           </h1>
@@ -138,7 +139,7 @@ export default function JobsPage() {
           {jobTypes.map((type) => {
             const cardClasses =
               "bg-white border-2 border-charcoal rounded-xl p-7 flex gap-5 items-start" +
-              (type.anchor ? " hover:shadow-md transition-shadow cursor-pointer" : "");
+              (type.anchor || type.to ? " hover:shadow-md transition-shadow cursor-pointer" : "");
 
             const content = (
               <>
@@ -149,6 +150,14 @@ export default function JobsPage() {
                 </div>
               </>
             );
+
+            if (type.to) {
+              return (
+                <Link key={type.label} to={type.to} className={cardClasses}>
+                  {content}
+                </Link>
+              );
+            }
 
             return type.anchor ? (
               <a key={type.label} href={type.anchor} className={cardClasses}>
