@@ -71,6 +71,25 @@ export function getResources(params = {}) {
   return request(`/resources${query ? `?${query}` : ""}`).then(normalizeListResponse);
 }
 
+export async function getAllResources(category) {
+  const limit = 500;
+  let page = 1;
+  let all = [];
+
+  while (true) {
+    const response = await getResources({ category, limit, page });
+    all = all.concat(response.data || []);
+
+    const totalPages = response.pagination?.totalPages || 1;
+    if (page >= totalPages) {
+      break;
+    }
+    page += 1;
+  }
+
+  return all;
+}
+
 export function getSyncStatus() {
   return request("/sync/status");
 }
@@ -108,6 +127,23 @@ export function formatPostedDate(dateValue) {
   return `Posted ${Math.floor(diffDays / 7)} weeks ago`;
 }
 
+export function cleanResourceText(text) {
+  if (!text) {
+    return "";
+  }
+
+  const stripped = text
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!stripped || /^null$/i.test(stripped)) {
+    return "";
+  }
+
+  return stripped;
+}
+
 export function summarizeText(text, sentenceCount = 3, maxLength = 260) {
   if (!text) {
     return "";
@@ -122,6 +158,29 @@ export function summarizeText(text, sentenceCount = 3, maxLength = 260) {
 
   const truncated = summary.slice(0, maxLength);
   return `${truncated.slice(0, truncated.lastIndexOf(" "))}…`;
+}
+
+export const BOROUGH_ORDER = ["Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island", "Citywide"];
+
+export function groupByBorough(resources) {
+  const groups = new Map();
+
+  resources.forEach((resource) => {
+    const borough = resource.borough || "Citywide";
+    if (!groups.has(borough)) {
+      groups.set(borough, []);
+    }
+    groups.get(borough).push(resource);
+  });
+
+  return [...groups.entries()].sort(([a], [b]) => {
+    const indexA = BOROUGH_ORDER.indexOf(a);
+    const indexB = BOROUGH_ORDER.indexOf(b);
+    if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
 }
 
 function parseDescriptionSection(text) {
