@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import foodPhoto from "../assets/iwant/food.jpg";
+import foodPhoto from "../assets/iwant/welfare-opportunities.jpg";
 import { useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
