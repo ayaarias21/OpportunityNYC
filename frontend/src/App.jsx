@@ -8,6 +8,7 @@ import FoodPantries from "./pages/FoodPantries";
 import CashAssistance from "./pages/CashAssistance";
 import HealthCoverage from "./pages/HealthCoverage";
 import WelfareSearchResults from "./pages/WelfareSearchResults";
+import HousingHelp from "./pages/HousingHelp";
 import JobsPage from "./pages/JobsPage";
 import JobDetail from "./pages/JobDetail";
 import JobTraining from "./pages/JobTraining";
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/food/cash-assistance" element={<CashAssistance />} />
         <Route path="/food/health-coverage" element={<HealthCoverage />} />
         <Route path="/food/search" element={<WelfareSearchResults />} />
+        <Route path="/food/housing" element={<HousingHelp />} />
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/jobs/training" element={<JobTraining />} />
         <Route path="/jobs/resume-help" element={<ResumeInterviewHelp />} />
