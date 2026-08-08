@@ -1,72 +1,48 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import foodPhoto from "../assets/iwant/food.jpg";
-import { useEffect, useState } from "react";
-import { getResources } from "../lib/api";
+import { useState } from "react";
 
 const foodTypes = [
   {
     tint: "bg-sage-tint",
     label: "Food Pantries",
     desc: "Free groceries and shelf-stable goods available weekly at community sites across the five boroughs.",
+    to: "/food/pantries",
   },
   {
     tint: "bg-peach-tint",
     label: "Meal Programs",
     desc: "Hot, ready-to-eat meals served daily at soup kitchens and community centers near you.",
+    to: "/food/meals",
   },
   {
     tint: "bg-lavender",
     label: "SNAP Benefits",
     desc: "Apply for or renew SNAP (food stamp) benefits, and get help with the application process.",
+    to: "/food/snap",
+  },
+  {
+    tint: "bg-sand",
+    label: "Cash Assistance",
+    desc: "Monthly and emergency cash help, unemployment income, and Social Security / SSI support.",
+    to: "/food/cash-assistance",
+  },
+  {
+    tint: "bg-sage-tint",
+    label: "Health Coverage",
+    desc: "Medicaid, Child Health Plus, and other no- or low-cost health insurance programs and enrollment offices.",
+    to: "/food/health-coverage",
   },
 ];
 
 export default function FoodAssistance() {
-  const [resources, setResources] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [searchValue, setSearchValue] = useState("");
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadResources() {
-      setLoading(true);
-      setError("");
-
-      try {
-        const response = await getResources({ category: "Food Assistance", limit: 100 });
-        if (!cancelled) {
-          setResources(response.data || []);
-        }
-      } catch (fetchError) {
-        if (!cancelled) {
-          setError(fetchError.message || "Could not load SNAP center listings.");
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadResources();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const filteredResources = resources.filter((resource) => {
-    if (!searchValue.trim()) {
-      return true;
-    }
-
-    const haystack = `${resource.title} ${resource.borough} ${resource.address} ${resource.postcode}`.toLowerCase();
-    return haystack.includes(searchValue.trim().toLowerCase());
-  });
+  const navigate = useNavigate();
 
   function handleSearchSubmit(event) {
     event.preventDefault();
+    const trimmed = searchValue.trim();
+    navigate(trimmed ? `/food/search?q=${encodeURIComponent(trimmed)}` : "/food/search");
   }
 
   return (
@@ -122,7 +98,7 @@ export default function FoodAssistance() {
               type="text"
               value={searchValue}
               onChange={(event) => setSearchValue(event.target.value)}
-              placeholder="Enter your zip code or borough"
+              placeholder="Search SNAP, Medicaid, cash assistance, a borough, zip code..."
               className="flex-1 bg-transparent outline-none px-4 text-cream placeholder:text-cream/55"
             />
             <button type="submit" className="bg-white text-charcoal font-semibold text-sm rounded-lg px-6">
@@ -136,81 +112,41 @@ export default function FoodAssistance() {
       <section className="max-w-6xl mx-auto px-6 py-16">
         <div className="text-center mb-11">
           <div className="font-sans text-xs tracking-widest uppercase text-accent mb-2.5">
-            Ways to Get Help
+            Did You Know?
           </div>
-          <h2 className="font-sans font-bold text-3xl text-charcoal mb-2.5">Types of Welfare Opportunities</h2>
+          <h2 className="font-sans font-bold text-3xl text-charcoal mb-2.5 max-w-3xl mx-auto">
+            1 in 5 eligible New Yorkers miss out on SNAP alone, and 57% of applicants hit
+            roadblocks trying to access benefits system-wide. We&rsquo;re closing that gap.
+          </h2>
           <p className="text-warm-gray text-sm">Pick the option that fits your situation.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {foodTypes.map((type) => (
-            <div
-              key={type.label}
-              className="bg-white border-2 border-charcoal rounded-xl p-7 flex gap-5 items-start"
-            >
-              <div className={`w-12 h-12 rounded-lg ${type.tint} flex-shrink-0`} />
-              <div>
-                <h3 className="font-sans font-bold text-lg text-charcoal mb-1.5">{type.label}</h3>
-                <p className="text-sm text-warm-gray">{type.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {foodTypes.map((type) => {
+            const cardClasses =
+              "bg-white border-2 border-charcoal rounded-xl p-7 flex gap-5 items-start" +
+              (type.to ? " hover:shadow-md transition-shadow cursor-pointer" : "");
 
-      {/* Live SNAP center listings */}
-      <section className="bg-sand">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="text-center mb-10">
-            <h2 className="font-sans font-bold text-2xl text-charcoal mb-2">
-              SNAP Center Locations
-            </h2>
-            <p className="text-warm-gray text-sm max-w-md mx-auto">
-              {loading
-                ? "Loading live listings..."
-                : `${filteredResources.length} verified SNAP centers available through OpportunityNYC.`}
-            </p>
-          </div>
-
-          {error && (
-            <p className="text-center text-sm text-red-700 mb-6">
-              {error} Run the Python sync script and backend server to populate live data.
-            </p>
-          )}
-
-          {!loading && filteredResources.length === 0 && !error && (
-            <p className="text-center text-warm-gray text-sm">
-              No SNAP centers matched your search.
-            </p>
-          )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredResources.map((resource) => (
-              <article
-                key={resource._id}
-                className="bg-white border-2 border-charcoal rounded-xl p-6"
-              >
-                <div className="font-sans text-xs tracking-widest uppercase text-accent mb-2">
-                  {resource.borough}
+            const content = (
+              <>
+                <div className={`w-12 h-12 rounded-lg ${type.tint} flex-shrink-0`} />
+                <div>
+                  <h3 className="font-sans font-bold text-lg text-charcoal mb-1.5">{type.label}</h3>
+                  <p className="text-sm text-warm-gray">{type.desc}</p>
                 </div>
-                <h3 className="font-sans font-bold text-lg text-charcoal mb-2">{resource.title}</h3>
-                <p className="text-sm text-warm-gray mb-3">{resource.address}</p>
-                {resource.hours && (
-                  <p className="text-sm text-charcoal mb-4">{resource.hours}</p>
-                )}
-                {resource.link && (
-                  <a
-                    href={resource.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm font-semibold text-accent hover:underline"
-                  >
-                    Learn about SNAP benefits →
-                  </a>
-                )}
-              </article>
-            ))}
-          </div>
+              </>
+            );
+
+            return type.to ? (
+              <Link key={type.label} to={type.to} className={cardClasses}>
+                {content}
+              </Link>
+            ) : (
+              <div key={type.label} className={cardClasses}>
+                {content}
+              </div>
+            );
+          })}
         </div>
       </section>
 
